@@ -5,304 +5,139 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { SidebarContext } from "@/context/SideBarContext";
 import Link from "next/link";
-import {
-  AiOutlineDashboard,
-  AiOutlineHome,
-  AiOutlineIdcard,
-  AiOutlineFileImage,
-  AiOutlineTeam,
-} from "react-icons/ai";
-import { PiTestTubeBold } from "react-icons/pi";
-import { FiLayers } from "react-icons/fi";
-import { BsBoxSeam } from "react-icons/bs";
-import { BiBuildings, BiLogOut } from "react-icons/bi";
+import { BiBuildings, BiLogOut, BiMenu } from "react-icons/bi";
+import { HiOutlineUsers, HiUser, HiUsers } from "react-icons/hi";
+import { MdOutlineDashboard } from "react-icons/md";
+import { RiFirstAidKitLine } from "react-icons/ri";
 import { GoGear } from "react-icons/go";
-import { RiNewsLine } from "react-icons/ri";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdKeyboardArrowUp,
-  MdOutlineKeyboardArrowDown,
-  MdOutlinePublish,
-} from "react-icons/md";
-import { GrUserAdmin } from "react-icons/gr";
-import { LiaUsersSolid } from "react-icons/lia";
 
-// Define types for sidebar items and subitems
 interface SubItem {
   name: string;
   href: string;
-  icon?: React.ComponentType; // Icon is optional
-  position?: boolean;
-  bottom?: number;
+  icon?: React.ComponentType;
 }
 
 interface SidebarItem {
   name: string;
   href: string;
-  icon?: React.ComponentType; // Icon is optional
-  subItems?: SubItem[]; // Optional subItems property
+  icon?: React.ComponentType;
+  subItems?: SubItem[];
   position?: boolean;
   bottom?: number;
 }
 
 const Sidebar = () => {
-  const pathname = usePathname(); // Get the current pathname
-  const { isCollapsed, toggleSidebarCollapse } = useContext(SidebarContext); // Sidebar context for state management
+  const pathname = usePathname();
+  const { isCollapsed, toggleSidebarCollapse } = useContext(SidebarContext);
+  const [isAccountsOpen, setIsAccountsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Sidebar items definition with proper types
   const sidebarItems: SidebarItem[] = [
     {
       name: "Dashboard",
       href: "/",
-      icon: AiOutlineHome, // Main icon for Dashboard
+      icon: MdOutlineDashboard,
     },
     {
-      name: "Onboard",
-      href: "/clinical-trial-request",
-      icon: RiNewsLine, // Main icon for Onboard
+      name: "Accounts",
+      href: "/auth",
+      icon: HiOutlineUsers,
       subItems: [
-        {
-          name: "Clinical Trials",
-          href: "/clinical-trial-request",
-          icon: PiTestTubeBold,
-        },
-        {
-          name: "Product Registrations",
-          href: "/product-registration-request",
-          icon: BsBoxSeam,
-        },
-        {
-          name: "Facility Registrations",
-          href: "/facility-registration-request",
-          icon: BiBuildings,
-        },
-        { name: "Contact Us", href: "/contact-form", icon: FiLayers },
+        { name: "Accounts", href: "/auth", icon: HiOutlineUsers },
+        { name: "All Users", href: "/auth/all-users", icon: HiUsers },
+        { name: "User Profile", href: "/auth/profile", icon: HiUser },
       ],
     },
     {
-      name: "IHA",
-      href: "/publications",
-      icon: AiOutlineTeam,
-      subItems: [
-        {
-          name: "Create publication",
-          href: "/publications/create",
-          icon: MdOutlinePublish,
-        },
-        {
-          name: "View publications",
-          href: "/publications",
-          icon: AiOutlineFileImage,
-        },
-        { name: "View Users", href: "/users", icon: LiaUsersSolid },
-      ],
+      name: "Equipments",
+      href: "/equipments",
+      icon: RiFirstAidKitLine,
     },
-    ...(localStorage.getItem("userRole") === "SA" ||
-    localStorage.getItem("userRole") === "PA"
-      ? [
-          {
-            name: "Admin",
-            href: "/user-management",
-            icon: BiBuildings,
-            subItems: [
-              {
-                name: "User Profile",
-                href: "/user-profile",
-                icon: AiOutlineIdcard,
-              },
-              {
-                name: "Create Admin",
-                href: "/create-admin",
-                icon: GrUserAdmin,
-              },
-              {
-                name: "User Management",
-                href: "/user-management",
-                icon: AiOutlineDashboard,
-              },
-            ],
-          },
-        ]
-      : []),
     {
       name: "Settings",
       href: "/settings",
       icon: GoGear,
-      position: true,
-      bottom: 50,
     },
     {
       name: "Log out",
       href: "/sign-out",
       icon: BiLogOut,
       position: true,
-      bottom: 0,
     },
   ];
 
-  // State for dropdown visibility
-  const [isRequestsDropdownOpen, setIsRequestsDropdownOpen] = useState(false);
-  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
-  const [isIHADropdownOpen, setIsIHADropdownOpen] = useState(false);
-
-  // Function to toggle dropdowns based on the parent item
-  const toggleDropdown = (name: string) => {
-    if (name === "Onboard") {
-      setIsRequestsDropdownOpen(!isRequestsDropdownOpen);
-      setIsAdminDropdownOpen(false);
-      setIsIHADropdownOpen(false);
-    } else if (name === "Admin") {
-      setIsAdminDropdownOpen(!isAdminDropdownOpen);
-      setIsRequestsDropdownOpen(false);
-      setIsIHADropdownOpen(false);
-    } else if (name === "IHA") {
-      setIsIHADropdownOpen(!isIHADropdownOpen);
-      setIsRequestsDropdownOpen(false);
-      setIsAdminDropdownOpen(false);
-    }
-  };
-
-  // Check if any subitem is active
-  const isSubItemActive = (subItems: SubItem[]) => {
-    return subItems.some((subItem) => pathname === subItem.href);
-  };
-
-  // Check if the parent item is active
-  const isParentActive = (item: SidebarItem) => {
-    return pathname === item.href || isSubItemActive(item.subItems || []);
-  };
-
   return (
-    <div className="flex flex-col h-full">
-      {/* Hamburger button for mobile view */}
-      <button className="lg:hidden p-2 text-xl" onClick={toggleSidebarCollapse}>
-        {isCollapsed ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}
-      </button>
-      <aside
-        className={`bg-gray-800 text-white w-64 transition-transform duration-300 ${
-          isCollapsed ? "transform -translate-x-full" : ""
-        }`}
+    <div className="flex bg-white flex-col md:flex-row pb-3 md:h-full lg:h-full h-0">
+      {/* Fixed Hamburger Icon for Mobile */}
+      <div className="p-4 md:hidden">
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-teal-600 focus:outline-none"
+        >
+          <BiMenu size={28} />
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 w-[70%] md:w-[20%] bg-white shadow-md z-50 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 transition-transform duration-300`}
       >
-        <div className="p-4 flex justify-center">
-          {isCollapsed ? (
-            <Image
-              width={100}
-              height={100}
-              className="h-12"
-              src="/small-iha-logo.svg"
-              alt="logo"
-              priority
-            />
-          ) : (
-            <Image
-              width={190}
-              height={80}
-              className="h-16"
-              src="/iha-logo.svg"
-              alt="logo"
-              priority
-            />
-          )}
+        <div className="shadow h-15 bg-white border w-full p-4">
+          <Image width={140} height={85} src="/Logo.svg" alt="logo" priority />
         </div>
-        <ul className="mt-4">
-          {sidebarItems.map(({ name, href, icon: Icon, subItems }) => (
-            <li className="relative" key={name}>
-              {subItems ? (
+        <aside className="bg-white text-white w-full h-full">
+          <ul className="mt-4 relative flex h-3/4 flex-col p-4 gap-4">
+            {sidebarItems.map(({ name, href, icon: Icon, subItems, position }) => (
+              <li className={`w-full ${position ? "absolute bottom-0" : ""}`} key={name}>
                 <div>
-                  <button
-                    className={`flex items-center justify-between w-full px-4 py-2 text-left rounded hover:bg-gray-700 transition ${
-                      isParentActive({ name, href, icon: Icon, subItems })
-                        ? "bg-gray-700"
-                        : ""
+                  <Link
+                    className={`flex items-center px-4 py-2 rounded text-black hover:text-teal-600 transition ${
+                      pathname === href ? "text-teal-600" : ""
                     }`}
-                    onClick={() => toggleDropdown(name)}
+                    href={href}
+                    onClick={(e) => {
+                      if (subItems) {
+                        e.preventDefault();
+                        setIsAccountsOpen(!isAccountsOpen);
+                      }
+                    }}
                   >
-                    <div className="flex items-center">
-                      <span className="mr-2">
-                        {Icon ? <Icon /> : null}{" "}
-                        {/* Render icon only if defined */}
-                      </span>
-                      <span>{name}</span>
-                    </div>
-                    <span>
-                      {!isCollapsed && (
-                        <>
-                          {name === "Onboard" &&
-                            (isRequestsDropdownOpen ? (
-                              <MdKeyboardArrowUp size={20} />
-                            ) : (
-                              <MdOutlineKeyboardArrowDown size={20} />
-                            ))}
-                          {name === "IHA" &&
-                            (isIHADropdownOpen ? (
-                              <MdKeyboardArrowUp size={20} />
-                            ) : (
-                              <MdOutlineKeyboardArrowDown size={20} />
-                            ))}
-                          {name === "Admin" &&
-                            (isAdminDropdownOpen ? (
-                              <MdKeyboardArrowUp size={20} />
-                            ) : (
-                              <MdOutlineKeyboardArrowDown size={20} />
-                            ))}
-                        </>
-                      )}
-                    </span>
-                  </button>
-                  {subItems && (
-                    <ul className="ml-4">
-                      {((name === "Onboard" && isRequestsDropdownOpen) ||
-                        (name === "Admin" && isAdminDropdownOpen) ||
-                        (name === "IHA" && isIHADropdownOpen)) && (
-                        <div>
-                          {subItems.map((subItem) => (
-                            <li
-                              key={subItem.name}
-                              className={`flex items-center p-2 rounded hover:bg-gray-600 ${
-                                pathname === subItem.href ? "bg-gray-600" : ""
-                              }`}
-                            >
-                              <Link
-                                className="flex items-center w-full"
-                                href={subItem.href}
-                                onClick={() => {
-                                  // Close all dropdowns when a subitem is clicked
-                                  setIsRequestsDropdownOpen(false);
-                                  setIsAdminDropdownOpen(false);
-                                  setIsIHADropdownOpen(false);
-                                }}
-                              >
-                                <span className="mr-2">
-                                  {subItem.icon ? <subItem.icon /> : null}{" "}
-                                  {/* Render subitem icon only if defined */}
-                                </span>
-                                <span>{subItem.name}</span>
-                              </Link>
-                            </li>
-                          ))}
-                        </div>
-                      )}
+                    <span className="mr-2">{Icon ? <Icon /> : null}</span>
+                    <span>{name}</span>
+                  </Link>
+                  {subItems && isAccountsOpen && (
+                    <ul className="ml-6 mt-2 space-y-2">
+                      {subItems.map(({ name, href, icon: SubIcon }) => (
+                        <li key={name}>
+                          <Link
+                            className={`flex items-center px-4 py-2 rounded text-black hover:text-teal-600 transition ${
+                              pathname === href ? "text-teal-600" : ""
+                            }`}
+                            href={href}
+                          >
+                            <span className="mr-2">{SubIcon ? <SubIcon /> : null}</span>
+                            <span>{name}</span>
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   )}
                 </div>
-              ) : (
-                <Link
-                  className={`flex items-center px-4 py-2 rounded hover:bg-gray-700 transition ${
-                    pathname === href ? "bg-gray-700" : ""
-                  }`}
-                  href={href}
-                >
-                  <span className="mr-2">
-                    {Icon ? <Icon /> : null} {/* Render icon only if defined */}
-                  </span>
-                  <span>{name}</span>
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </aside>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+
+      {/* Overlay for Mobile Sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
     </div>
   );
 };
