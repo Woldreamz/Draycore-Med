@@ -10,30 +10,30 @@ import Navbar from "@/components/Navbar";
 
 const EquipmentsPage = () => {
   return (
-    <div className="bg-white">
-      {/* Sidebar Placeholder - hidden on small screens */}
+    <div className="flex bg-gray-100 flex-col lg:flex-row min-h-screen">
+      {/* Sidebar */}
       <Layout>
-        <div className="hidden w-full md:ml-64 w-1/4 bg-white p-4">
-          {/* Sidebar content here */}
+        <div className="hidden md:block md:w-1/4 bg-white shadow-lg">
+          {/* Sidebar content if needed */}
         </div>
         <Navbar />
       </Layout>
 
-      <section className="flex flex-col pt-20 md:pt-20 md:pl-[10%] lg:pl-[10%]">
-        {/* Heading and button at the top */}
-        <MinorNav
-          heading="Equipment List"
-          btn="Add new"
-          src={add}
-          link="/equipments/basic_information"
-          alt="add new"
-        />
-
-        {/* List of equipment cards directly under the heading */}
-        <div className="flex flex-wrap gap-4 mt-4">
-          <EquipmentList data={equips} />
-        </div>
-      </section>
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-[20%] p-6 space-y-6 pt-20">
+        <section className="bg-white p-6 rounded-lg shadow-md pt-10 pr-20">
+          <MinorNav
+            heading="Equipment List"
+            btn="Add new"
+            src={add}
+            link="/equipments/basic_information"
+            alt="add new"
+          />
+          <div className="flex flex-wrap gap-4 mt-4">
+            <EquipmentList data={equips} />
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

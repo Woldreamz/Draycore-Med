@@ -35,7 +35,7 @@ const UploadCard = () => {
               />
             ))}
           <img
-            src="/Images/Images Frame.png"
+            src="/Images/Images%20Frame.png"
             alt="Choose Image"
             className="w-full sm:w-1/3 md:w-20 h-20 border rounded object-cover"
           />

@@ -5,7 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MdOutlineDashboard } from "react-icons/md";
-import { HiOutlineUsers, HiUsers, HiUser } from "react-icons/hi";
+import {
+  HiOutlineUsers,
+  HiUsers,
+  HiUser,
+  HiOutlineScissors,
+  HiBadgeCheck,
+  HiTrendingUp,
+} from "react-icons/hi";
 import { RiFirstAidKitLine } from "react-icons/ri";
 import { GoGear } from "react-icons/go";
 import { BiLogOut } from "react-icons/bi";
@@ -16,7 +23,17 @@ interface SidebarProps {
 
 const Sidebar = ({ className }: SidebarProps) => {
   const pathname = usePathname();
-  const [isAccountsOpen, setIsAccountsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({
+    Accounts: false,
+    Equipments: false,
+  });
+
+  const toggleDropdown = (itemName: string) => {
+    setDropdownOpen((prev) => ({
+      ...prev,
+      [itemName]: !prev[itemName],
+    }));
+  };
 
   const sidebarItems = [
     {
@@ -38,6 +55,19 @@ const Sidebar = ({ className }: SidebarProps) => {
       name: "Equipments",
       href: "/equipments",
       icon: RiFirstAidKitLine,
+      subItems: [
+        { name: "Equipments", href: "/equipments", icon: HiOutlineScissors },
+        {
+          name: "Equipment Details",
+          href: "/equipments/details",
+          icon: HiTrendingUp,
+        },
+        {
+          name: "Basic Information",
+          href: "/equipments/basic_information",
+          icon: HiBadgeCheck,
+        },
+      ],
     },
     {
       name: "Settings",
@@ -72,15 +102,20 @@ const Sidebar = ({ className }: SidebarProps) => {
                       onClick={(e) => {
                         if (subItems) {
                           e.preventDefault();
-                          setIsAccountsOpen(!isAccountsOpen);
+                          toggleDropdown(name);
                         }
                       }}
                     >
                       <span className="mr-2">{Icon ? <Icon /> : null}</span>
                       <span>{name}</span>
                     </Link>
-                    {subItems && isAccountsOpen && (
-                      <ul className="ml-6 mt-2 space-y-2">
+                    {subItems && dropdownOpen[name] && (
+                      <ul
+                        className="ml-6 mt-2 space-y-2 transition-all duration-300 overflow-hidden"
+                        style={{
+                          maxHeight: dropdownOpen[name] ? "300px" : "0",
+                        }}
+                      >
                         {subItems.map(({ name, href, icon: SubIcon }) => (
                           <li key={name}>
                             <Link
