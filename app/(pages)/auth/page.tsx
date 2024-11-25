@@ -9,6 +9,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Accounts: FC = () => {
   return (
@@ -30,7 +31,7 @@ const Accounts: FC = () => {
             <h3 className="text-sm font-medium text-gray-600">All Users</h3>
             <button className="text-gray-600 bg-gray-100 px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-green-600 hover:text-white">
               <span>View All</span>
-              <FontAwesomeIcon icon={faChevronRight} className="h-4 w-4" />
+              <FontAwesomeIcon icon={faChevronRight as IconProp} className="h-4 w-4" />
             </button>
           </div>
 
@@ -81,10 +82,16 @@ const Accounts: FC = () => {
                     <td className="p-3">{user.location}</td>
                     <td className="p-3 flex space-x-3">
                       <button className="text-green-500 bg-gray-100 hover:text-green-700 rounded-md">
-                        <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
+                        <FontAwesomeIcon
+                          icon={faEye as IconProp}
+                          className="h-4 w-4"
+                        />
                       </button>
                       <button className="text-red-500 bg-gray-100 hover:text-red-700 rounded-md">
-                        <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+                        <FontAwesomeIcon
+                          icon={faTrash as IconProp}
+                          className="h-4 w-4"
+                        />
                       </button>
                     </td>
                   </tr>
@@ -100,7 +107,10 @@ const Accounts: FC = () => {
             <h3 className="text-sm font-medium text-gray-600">Top User</h3>
             <button className="text-white bg-red-500 px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-red-600">
               <span>June</span>
-              <FontAwesomeIcon icon={faChevronRight} className="h-4 w-4" />
+              <FontAwesomeIcon
+                icon={faChevronRight as IconProp}
+                className="h-4 w-4"
+              />
             </button>
           </div>
 
@@ -113,8 +123,8 @@ const Accounts: FC = () => {
                   <th className="p-3 text-left text-gray-600">Saved</th>
                 </tr>
               </thead>
-              <tbody>
-                {Array.from({ length: 5 }, (_, i) => ({
+              <tbody>_
+                {Array.from({ length: 5 }, () => ({
                   username: "Jonathan Barks",
                   searches: "500+",
                   saved: 45,

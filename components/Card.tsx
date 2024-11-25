@@ -5,6 +5,7 @@ type CardProps = {
   title: string;
   value: string;
   trend: string;
+  className: string; // Optional class name for custom styling
   iconSrc: string;
   iconWidth: number;
   iconHeight: number;
@@ -14,6 +15,7 @@ type CardProps = {
 function Card({
   title,
   value,
+  className,
   trend,
   iconSrc,
   iconWidth,
@@ -38,7 +40,7 @@ function Card({
         alt={`${title} Icon`}
         width={iconWidth} // Specify width
         height={iconHeight} // Specify height
-        className="w-8 h-8" // Keep classes for responsiveness if needed
+        className={className} // Keep classes for responsiveness if needed
       />
     </div>
   );

@@ -36,6 +36,7 @@ const DashboardContent = () => {
             iconSrc="/icons/Icon.svg"
             iconWidth={150}
             iconHeight={150}
+            className="h-8 w-8"
           />
           <Card
             title="Total Searches"
@@ -45,6 +46,7 @@ const DashboardContent = () => {
             iconSrc="/icons/reshape.svg"
             iconWidth={150}
             iconHeight={150}
+            className="h-8 w-8"
           />
           <Card
             title="Total Matches"
@@ -54,6 +56,7 @@ const DashboardContent = () => {
             iconSrc="/icons/combineshape.svg"
             iconWidth={150}
             iconHeight={150}
+            className="h-8 w-8"
           />
         </div>
 

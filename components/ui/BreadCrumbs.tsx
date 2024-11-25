@@ -1,43 +1,43 @@
 import Link from "next/link";
-import { FiChevronRight } from "react-icons/fi"; // Icon import from react-icons
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons"; // Correct import
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-interface Path {
+interface Breadcrumb {
+  name: string;
   href: string;
-  label: string;
 }
 
-interface BreadCrumbProps {
-  paths: Path[];
+interface BreadcrumbsProps {
+  breadcrumbs: Breadcrumb[];
+  className?: string;
 }
 
-const BreadCrumbs = ({ paths }: BreadCrumbProps) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs, className }) => {
+
   return (
-    <nav aria-label="breadcrumb">
-      <ol className="flex list-none p-0 m-0">
-        {paths.map((path, index) => {
-          const isLast = index === paths.length - 1;
-          return (
-            <li key={index} className="flex items-center">
-              {!isLast ? (
-                <Link href={path.href}>
-                  <a className="text-blue-600 hover:underline">{path.label}</a>
-                </Link>
-              ) : (
-                <span className="px-2 py-1 bg-gray-200 text-gray-800 rounded-full">
-                  {path.label}
-                </span>
-              )}
-              {!isLast && (
-                <span className="mx-2">
-                  <FiChevronRight />
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+    <nav
+      aria-label="Breadcrumb"
+      className="flex text-sm font-medium text-gray-700 mb-4"
+    >
+      {breadcrumbs.map((breadcrumb, index) => (
+        <div key={breadcrumb.href} className="flex items-center">
+          <Link href={breadcrumb.href} className="hover:text-green-500">
+            {breadcrumb.name}
+          </Link>
+          {index < breadcrumbs.length - 1 && (
+            <span className="mx-2 text-gray-400">
+              <FontAwesomeIcon
+                icon={faChevronRight as IconProp}
+                className="h-3 w-3 text-gray-500"
+              />
+            </span>
+          )}
+        </div>
+      ))}
     </nav>
   );
 };
 
-export default BreadCrumbs;
+export default Breadcrumbs;
