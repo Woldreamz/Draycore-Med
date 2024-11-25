@@ -15,29 +15,25 @@ const Navbar = () => {
         {/* Right section - Profile */}
         <div className="flex items-center ml-auto">
           {/* Pill-shaped profile section */}
-          <div className="relative flex items-center bg-gray-100 p-1 pl-1 pr-2 rounded-full shadow-md">
+          <div className="relative flex items-center bg-gray-100 p-1 pl-2 pr-3 rounded-full shadow-md h-12">
             {/* Profile Image */}
             <Image
-              width={20} // Reduced size (half the original)
-              height={20} // Reduced size (half the original)
+              width={40} // Increased size by 1/3
+              height={40} // Increased size by 1/3
               src="/work.svg"
               alt="Profile"
-              className="w-5 h-5 rounded-full" // Adjusted image size
+              className="w-10 h-10 rounded-full" // Adjusted for scaling
             />
             {/* Name and Designation */}
-            <div className="ml-1">
-              {" "}
-              {/* Reduced margin */}
-              <p className="text-xs font-semibold text-gray-800">
+            <div className="ml-3 pt-4">
+              <p className="text-sm font-semibold text-gray-800 leading-3">
                 Ella Barris
-              </p>{" "}
-              {/* Smaller text */}
-              <p className="text-xxs text-gray-500">Admin</p>{" "}
-              {/* Smaller text */}
+              </p>
+              <p className="text-sm text-gray-500">Admin</p>
             </div>
             {/* Dropdown Icon */}
             <button
-              className="ml-1 text-gray-600 hover:text-gray-800 transform scale-75" // Reduced size by 70%
+              className="ml-2 text-gray-600 hover:text-gray-800 text-xs leading-none px-1.5"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               ▼
@@ -47,7 +43,7 @@ const Navbar = () => {
               <div className="absolute top-12 right-0 bg-white border border-gray-200 rounded-md shadow-lg w-40">
                 <ul>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    <a href="/account">Account</a>
+                    <a href="/auth/profile">Account</a>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                     <a href="/settings">Settings</a>

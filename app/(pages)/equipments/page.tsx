@@ -1,3 +1,5 @@
+"use client";
+
 import EquipmentList from "@/components/equipment/cardList";
 import { MinorNav } from "@/components/equipment/minorNav";
 import add from "@/public/icons/add.svg";
