@@ -1,17 +1,86 @@
 "use client";
 
-import { FC } from "react";
+import React, { useState } from "react";
 import Layout from "app/(root)/layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
   faTrash,
   faChevronRight,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-const Accounts: FC = () => {
+interface User {
+  name: string;
+  occupation: string;
+  location: string;
+}
+
+interface TopUser {
+  username: string;
+  searches: string;
+  saved: number;
+}
+
+const Accounts = () => {
+  const [users, setUsers] = useState<User[]>([
+    {
+      name: "Angela Bassett",
+      occupation: "Oncologist",
+      location: "Los Angeles, CA",
+    },
+    {
+      name: "Rahmin Dunis",
+      occupation: "Oncologist",
+      location: "Mumbai, India",
+    },
+    { name: "Joe Chin", occupation: "Gynecologist", location: "Cuba" },
+    { name: "Halimar Abubakar", occupation: "Optician", location: "Kiev" },
+    { name: "Gustavo Fring", occupation: "Dentist", location: "Tokyo" },
+  ]);
+
+  const topUsersByMonth: Record<string, TopUser[]> = {
+    January: [
+      { username: "Alice Johnson", searches: "300+", saved: 20 },
+      { username: "Bob Brown", searches: "250+", saved: 15 },
+    ],
+    February: [
+      { username: "Catherine Smith", searches: "400+", saved: 30 },
+      { username: "David Lee", searches: "350+", saved: 25 },
+    ],
+    March: [
+      { username: "Eleanor White", searches: "450+", saved: 40 },
+      { username: "Frank Wright", searches: "400+", saved: 35 },
+    ],
+    All: [
+      { username: "Alice Johnson", searches: "300+", saved: 20 },
+      { username: "Bob Brown", searches: "250+", saved: 15 },
+      { username: "Catherine Smith", searches: "400+", saved: 30 },
+      { username: "David Lee", searches: "350+", saved: 25 },
+      { username: "Eleanor White", searches: "450+", saved: 40 },
+      { username: "Frank Wright", searches: "400+", saved: 35 },
+    ],
+  };
+
+  const [selectedMonth, setSelectedMonth] = useState("January");
+  const [viewAll, setViewAll] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const handleView = (user: User) => {
+    setSelectedUser(user);
+  };
+
+  const handleDelete = (userName: string) => {
+    const confirmed = confirm(`Are you sure you want to delete ${userName}?`);
+    if (confirmed) {
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.name !== userName),
+      );
+    }
+  };
+
   return (
     <div className="flex bg-gray-100 flex-col lg:flex-row min-h-screen">
       {/* Sidebar */}
@@ -29,10 +98,6 @@ const Accounts: FC = () => {
           <h2 className="text-xl font-semibold text-gray-800">Accounts</h2>
           <div className="flex justify-between items-center mt-4">
             <h3 className="text-sm font-medium text-gray-600">All Users</h3>
-            <button className="text-gray-600 bg-gray-100 px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-green-600 hover:text-white">
-              <span>View All</span>
-              <FontAwesomeIcon icon={faChevronRight as IconProp} className="h-4 w-4" />
-            </button>
           </div>
 
           <div className="overflow-x-auto mt-4">
@@ -46,33 +111,7 @@ const Accounts: FC = () => {
                 </tr>
               </thead>
               <tbody className="rounded-lg">
-                {[
-                  {
-                    name: "Angela Bassett",
-                    occupation: "Oncologist",
-                    location: "Los Angeles, CA",
-                  },
-                  {
-                    name: "Rahmin Dunis",
-                    occupation: "Oncologist",
-                    location: "Mumbai, India",
-                  },
-                  {
-                    name: "Joe Chin",
-                    occupation: "Gynecologist",
-                    location: "Cuba",
-                  },
-                  {
-                    name: "Halimar Abubakar",
-                    occupation: "Optician",
-                    location: "Kiev",
-                  },
-                  {
-                    name: "Gustavo Fring",
-                    occupation: "Dentist",
-                    location: "Tokyo",
-                  },
-                ].map((user, index) => (
+                {users.map((user, index) => (
                   <tr
                     key={index}
                     className="border-t hover:bg-gray-50 rounded-lg"
@@ -81,13 +120,19 @@ const Accounts: FC = () => {
                     <td className="p-3">{user.occupation}</td>
                     <td className="p-3">{user.location}</td>
                     <td className="p-3 flex space-x-3">
-                      <button className="text-green-500 bg-gray-100 hover:text-green-700 rounded-md">
+                      <button
+                        onClick={() => handleView(user)}
+                        className="text-green-500 bg-gray-100 hover:text-green-700 rounded-md p-2"
+                      >
                         <FontAwesomeIcon
                           icon={faEye as IconProp}
                           className="h-4 w-4"
                         />
                       </button>
-                      <button className="text-red-500 bg-gray-100 hover:text-red-700 rounded-md">
+                      <button
+                        onClick={() => handleDelete(user.name)}
+                        className="text-red-500 bg-gray-100 hover:text-red-700 rounded-md p-2"
+                      >
                         <FontAwesomeIcon
                           icon={faTrash as IconProp}
                           className="h-4 w-4"
@@ -104,14 +149,26 @@ const Accounts: FC = () => {
         {/* Top User Section */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-gray-600">Top User</h3>
-            <button className="text-white bg-red-500 px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-red-600">
-              <span>June</span>
-              <FontAwesomeIcon
-                icon={faChevronRight as IconProp}
-                className="h-4 w-4"
-              />
-            </button>
+            <h3 className="text-sm font-medium text-gray-600">Top Users</h3>
+            <div className="flex space-x-4">
+              <select
+                className="px-4 py-2 border rounded-md"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                {Object.keys(topUsersByMonth).map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setViewAll(!viewAll)}
+                className="text-white bg-blue-500 px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-blue-600"
+              >
+                <span>{viewAll ? "View Current Month" : "View All"}</span>
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto mt-4">
@@ -123,12 +180,11 @@ const Accounts: FC = () => {
                   <th className="p-3 text-left text-gray-600">Saved</th>
                 </tr>
               </thead>
-              <tbody>_
-                {Array.from({ length: 5 }, () => ({
-                  username: "Jonathan Barks",
-                  searches: "500+",
-                  saved: 45,
-                })).map((user, index) => (
+              <tbody>
+                {(viewAll
+                  ? topUsersByMonth["All"]
+                  : topUsersByMonth[selectedMonth] || []
+                ).map((user, index) => (
                   <tr
                     key={index}
                     className="border-t hover:bg-gray-50 rounded-lg"
@@ -143,6 +199,25 @@ const Accounts: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* User Profile Popup */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+              onClick={() => setSelectedUser(null)}
+            >
+              <FontAwesomeIcon icon={faTimes as IconProp} />
+            </button>
+            <h2 className="text-lg font-semibold text-gray-800">
+              {selectedUser.name}
+            </h2>
+            <p className="text-sm text-gray-600">{selectedUser.occupation}</p>
+            <p className="text-sm text-gray-600">{selectedUser.location}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
