@@ -8,7 +8,8 @@ import { faEye, faTrash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import Breadcrumbs from "@/components/ui/BreadCrumbs";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { BASE_URL } from "@/api/base-url"; // Import BASE_URL
+import { BASE_URL } from "@/api/base-url";
+import Modal from "@/components/Modal"; // Import the Modal component
 
 const AllUsers = () => {
   const breadcrumbs = [
@@ -20,24 +21,43 @@ const AllUsers = () => {
     name: string;
     occupation: string;
     location: string;
-    profileImage?: string;
+    id: number;
   }>(null);
 
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [users, setUsers] = useState<
-    { name: string; occupation: string; location: string }[]
+    { name: string; occupation: string; location: string; id: number }[]
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<null | {
+    id: number;
+    name: string;
+  }>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}users`); // Use BASE_URL
+        const response = await fetch(`${BASE_URL}users`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch users.");
+        }
+
         const data = await response.json();
         setUsers(data);
-      } catch (err) {
-        setError("Failed to fetch users.");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError("Failed to fetch users.");
+          console.error(err.message); // Now safely log the error message
+        } else {
+          console.error("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -50,23 +70,34 @@ const AllUsers = () => {
     name: string;
     occupation: string;
     location: string;
+    id: number;
   }) => {
     setSelectedUser(user);
-    setUploadedImage(null); // Reset image for each new user
   };
 
-  const handleDeleteUser = (name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-      alert(`${name} deleted.`);
-    }
+  const handleDeleteUser = (userId: number, userName: string) => {
+    setUserToDelete({ id: userId, name: userName });
+    setIsModalOpen(true);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setUploadedImage(reader.result as string);
-      reader.readAsDataURL(file);
+  const handleDeleteApiCall = async (userId: number, userName: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete user.");
+      }
+
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      alert(`${userName} deleted.`);
+    } catch (error) {
+      alert("An error occurred while deleting the user.");
+      console.error(error);
     }
   };
 
@@ -75,7 +106,6 @@ const AllUsers = () => {
 
   return (
     <div className="flex flex-col bg-gray-100 w-full lg:grid lg:grid-cols-[auto,1fr] min-h-screen text-gray-800">
-      {/* Sidebar Placeholder */}
       <Layout>
         <div className="hidden lg:block lg:w-1/4 bg-white shadow-lg">
           {/* Sidebar content */}
@@ -83,7 +113,6 @@ const AllUsers = () => {
         <Navbar />
       </Layout>
 
-      {/* Main Content */}
       <div className="flex-1 lg:ml-[25%] p-6 space-y-6 pt-20">
         <header className="flex justify-between items-center p-4 bg-white shadow-md">
           <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -94,7 +123,6 @@ const AllUsers = () => {
           </Link>
         </header>
 
-        {/* Users Table */}
         <section className="mt-4 bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">
             All Users
@@ -126,7 +154,7 @@ const AllUsers = () => {
                         />
                       </button>
                       <button
-                        onClick={() => handleDeleteUser(user.name)}
+                        onClick={() => handleDeleteUser(user.id, user.name)}
                         className="flex items-center text-red-500 p-2 hover:text-red-700"
                       >
                         <FontAwesomeIcon
@@ -143,7 +171,6 @@ const AllUsers = () => {
         </section>
       </div>
 
-      {/* Profile Popup */}
       {selectedUser && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
@@ -161,43 +188,25 @@ const AllUsers = () => {
                 />
               </button>
             </div>
-            <div className="flex flex-col items-center space-y-4">
-              {/* Profile Image */}
-              <div className="w-32 h-32 rounded-full border border-gray-300 overflow-hidden">
-                {uploadedImage ? (
-                  <img
-                    src={uploadedImage}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                    <span className="text-gray-400 text-sm">No Image</span>
-                  </div>
-                )}
-              </div>
-              <label className="text-sm text-gray-600 cursor-pointer">
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageUpload}
-                />
-                <span className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                  Upload Image
-                </span>
-              </label>
-              {/* User Details */}
-              <div className="text-center">
-                <h3 className="text-lg font-semibold">{selectedUser.name}</h3>
-                <p className="text-sm text-gray-600">
-                  {selectedUser.occupation}
-                </p>
-                <p className="text-sm text-gray-600">{selectedUser.location}</p>
-              </div>
+            <div>
+              <p>Name: {selectedUser.name}</p>
+              <p>Occupation: {selectedUser.occupation}</p>
+              <p>Location: {selectedUser.location}</p>
             </div>
           </div>
         </div>
+      )}
+
+      {isModalOpen && userToDelete && (
+        <Modal
+          isOpen={isModalOpen}
+          message={`Are you sure you want to delete ${userToDelete.name}?`}
+          onConfirm={() => {
+            handleDeleteApiCall(userToDelete.id, userToDelete.name);
+            setIsModalOpen(false);
+          }}
+          onCancel={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   );
