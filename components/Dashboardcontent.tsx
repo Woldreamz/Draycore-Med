@@ -1,5 +1,14 @@
 import { useState } from "react";
 import { FaClock, FaChevronDown } from "react-icons/fa";
+import {
+  format,
+  isToday,
+  isYesterday,
+  startOfWeek,
+  endOfWeek,
+  subMonths,
+  isWithinInterval,
+} from "date-fns";
 import Card from "./Card";
 import Layout from "app/(root)/layout"; // Assuming this is the correct path
 import Navbar from "@/components/Navbar";
@@ -16,31 +25,31 @@ const DashboardContent = () => {
   const [sortColumn, setSortColumn] = useState<keyof TableData | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  const [tableData, setTableData] = useState<TableData[]>([
+  const initialData: TableData[] = [
     {
       user: "Daniel Benson",
       recentSearch: "2 Pack Trauma Shears",
-      dateTime: "2024-11-22 09:36 AM", // Updated date
+      dateTime: "2024-11-26 09:36 AM", // Updated date
     },
     {
       user: "Emily Watson",
       recentSearch: "Pulse Oximeter",
-      dateTime: "2024-10-15 02:30 PM", // Updated date
+      dateTime: "2024-11-25 02:30 PM", // Updated date
     },
     {
       user: "John Doe",
       recentSearch: "Surgical Scissors",
-      dateTime: "2024-09-12 10:45 AM", // Updated date
+      dateTime: "2024-11-12 10:45 AM", // Updated date
     },
     {
       user: "Alice Green",
       recentSearch: "Blood Pressure Monitor",
-      dateTime: "2024-08-03 01:15 PM", // Updated date
+      dateTime: "2024-10-03 01:15 PM", // Updated date
     },
     {
       user: "Michael Scott",
       recentSearch: "Sterile Gloves",
-      dateTime: "2024-07-25 08:00 AM", // Updated date
+      dateTime: "2024-09-25 08:00 AM", // Updated date
     },
     {
       user: "Sarah Johnson",
@@ -50,29 +59,30 @@ const DashboardContent = () => {
     {
       user: "Chris Walker",
       recentSearch: "X-Ray Gloves",
-      dateTime: "2024-05-20 03:00 PM",
+      dateTime: "2024-06-2 03:00 PM",
     },
     {
       user: "David Brown",
       recentSearch: "Bandage Roll",
-      dateTime: "2024-04-10 02:15 PM",
+      dateTime: "2023-04-10 02:15 PM",
     },
     {
       user: "Linda Taylor",
       recentSearch: "Surgical Mask",
-      dateTime: "2024-03-25 09:45 AM",
+      dateTime: "2023-03-25 09:45 AM",
     },
     {
       user: "Paul Adams",
       recentSearch: "Gauze Pads",
-      dateTime: "2024-02-17 01:30 PM",
+      dateTime: "2023-02-17 01:30 PM",
     },
     {
       user: "Nina Cooper",
       recentSearch: "Disinfectant Wipes",
-      dateTime: "2024-01-10 10:00 AM",
+      dateTime: "2023-01-10 10:00 AM",
     },
-  ]);
+  ];
+  const [tableData, setTableData] = useState<TableData[]>(initialData);
 
   // Toggles dropdown visibility
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
@@ -84,149 +94,115 @@ const DashboardContent = () => {
     console.log(`Filter selected: ${filter}`);
 
     const now = new Date();
-    let filteredData;
+    let filteredData: TableData[] = initialData;
 
     switch (filter) {
       case "Today":
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return (
-            itemDate.getDate() === now.getDate() &&
-            itemDate.getMonth() === now.getMonth() &&
-            itemDate.getFullYear() === now.getFullYear()
-          );
-        });
+        filteredData = initialData.filter((item) =>
+          isToday(new Date(item.dateTime)),
+        );
         break;
 
       case "Yesterday":
-        const yesterday = new Date(now);
-        yesterday.setDate(now.getDate() - 1);
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return (
-            itemDate.getDate() === yesterday.getDate() &&
-            itemDate.getMonth() === yesterday.getMonth() &&
-            itemDate.getFullYear() === yesterday.getFullYear()
-          );
-        });
+        filteredData = initialData.filter((item) =>
+          isYesterday(new Date(item.dateTime)),
+        );
         break;
 
       case "This Week":
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - now.getDay()); // Set to the start of the week (Sunday)
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to the end of the week (Saturday)
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return itemDate >= startOfWeek && itemDate <= endOfWeek;
-        });
-        break;
-
-      case "This Month":
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return (
-            itemDate.getMonth() === now.getMonth() &&
-            itemDate.getFullYear() === now.getFullYear()
-          );
-        });
-        break;
-
-      case "Last Month":
-        const lastMonth = new Date(now);
-        lastMonth.setMonth(now.getMonth() - 1);
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return (
-            itemDate.getMonth() === lastMonth.getMonth() &&
-            itemDate.getFullYear() === lastMonth.getFullYear()
-          );
-        });
+        filteredData = initialData.filter((item) =>
+          isWithinInterval(new Date(item.dateTime), {
+            start: startOfWeek(now),
+            end: endOfWeek(now),
+          }),
+        );
         break;
 
       case "Last Week":
-        const startOfLastWeek = new Date(now);
-        startOfLastWeek.setDate(now.getDate() - now.getDay() - 7); // Start of last week (previous Sunday)
-        const endOfLastWeek = new Date(startOfLastWeek);
-        endOfLastWeek.setDate(startOfLastWeek.getDate() + 6); // End of last week (previous Saturday)
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return itemDate >= startOfLastWeek && itemDate <= endOfLastWeek;
+        const startOfLastWeek = startOfWeek(subMonths(now, 0), {
+          weekStartsOn: 1,
         });
+        const endOfLastWeek = endOfWeek(startOfLastWeek);
+        filteredData = initialData.filter((item) =>
+          isWithinInterval(new Date(item.dateTime), {
+            start: startOfLastWeek,
+            end: endOfLastWeek,
+          }),
+        );
         break;
 
       case "Last 3 Months":
-        const threeMonthsAgo = new Date(now);
-        threeMonthsAgo.setMonth(now.getMonth() - 3); // Subtract 3 months from the current date
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return itemDate >= threeMonthsAgo && itemDate <= now;
-        });
+        filteredData = initialData.filter((item) =>
+          isWithinInterval(new Date(item.dateTime), {
+            start: subMonths(now, 3),
+            end: now,
+          }),
+        );
         break;
 
       case "Last 6 Months":
-        const sixMonthsAgo = new Date(now);
-        sixMonthsAgo.setMonth(now.getMonth() - 6); // Subtract 6 months from the current date
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return itemDate >= sixMonthsAgo && itemDate <= now;
-        });
+        filteredData = initialData.filter((item) =>
+          isWithinInterval(new Date(item.dateTime), {
+            start: subMonths(now, 6),
+            end: now,
+          }),
+        );
         break;
 
       case "Last Year":
-        const lastYear = new Date(now);
-        lastYear.setFullYear(now.getFullYear() - 1); // Subtract 1 year from the current date
-        filteredData = tableData.filter((item) => {
-          const itemDate = new Date(item.dateTime);
-          return itemDate.getFullYear() === lastYear.getFullYear();
-        });
+        filteredData = initialData.filter(
+          (item) =>
+            new Date(item.dateTime).getFullYear() === now.getFullYear() - 1,
+        );
         break;
 
       default:
-        filteredData = tableData;
+        break; // Return the full dataset for invalid or default filters
     }
 
     // Apply sort after filter
     if (sortColumn) {
       filteredData = sortData(filteredData, sortColumn, sortDirection);
     }
-
-    setTableData(filteredData); // Update table with filtered and sorted data
+    setTableData(filteredData);
   };
 
   // Sorting function
   const handleSort = (column: keyof TableData) => {
-    const direction =
+    const newDirection =
       sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
-    const sortedData = [...tableData].sort((a, b) => {
-      if (column === "recentSearch") {
-        // Case-insensitive comparison for recent searches
-        const valueA = a[column].toLowerCase();
-        const valueB = b[column].toLowerCase();
-        if (valueA < valueB) return direction === "asc" ? -1 : 1;
-        if (valueA > valueB) return direction === "asc" ? 1 : -1;
-        return 0;
-      } else if (column === "dateTime") {
-        // Date comparison for the dateTime column
-        const dateA = new Date(a[column]);
-        const dateB = new Date(b[column]);
-        if (dateA < dateB) return direction === "asc" ? -1 : 1;
-        if (dateA > dateB) return direction === "asc" ? 1 : -1;
-        return 0;
-      } else {
-        // Default comparison for other columns
-        if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
-        if (a[column] > b[column]) return direction === "asc" ? 1 : -1;
-        return 0;
-      }
-    });
-
     setSortColumn(column);
-    setSortDirection(direction);
-    setTableData(sortedData);
+    setSortDirection(newDirection);
+    setTableData(sortData([...tableData], column, newDirection));
   };
 
-  function handleViewAll() {}
+  // Utility function for sorting
+  const sortData = (
+    data: TableData[],
+    column: keyof TableData,
+    direction: "asc" | "desc",
+  ) => {
+    if (data.length === 0) return data; // Guard for empty dataset
+
+    return data.sort((a, b) => {
+      const valueA =
+        column === "dateTime"
+          ? new Date(a[column]).getTime()
+          : String(a[column]).toLowerCase();
+      const valueB =
+        column === "dateTime"
+          ? new Date(b[column]).getTime()
+          : String(b[column]).toLowerCase();
+
+      if (valueA < valueB) return direction === "asc" ? -1 : 1;
+      if (valueA > valueB) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  };
+
+  function handleViewAll() {
+    setTableData(initialData); // Reset to full dataset
+  }
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -310,9 +286,11 @@ const DashboardContent = () => {
                     {[
                       "Today",
                       "Yesterday",
-                      "Two Weeks Ago",
-                      "Last Month",
-                      "Two Months Ago",
+                      "This Week",
+                      "Last Week",
+                      "Last 3 Months",
+                      "Last 6 Months",
+                      "Last Year",
                     ].map((filter) => (
                       <li
                         key={filter}
