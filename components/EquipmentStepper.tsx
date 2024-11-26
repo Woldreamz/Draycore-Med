@@ -5,22 +5,78 @@ import React, { useState } from "react";
 const steps = [
   { id: 1, title: "Basic Information" },
   { id: 2, title: "Equipment Description" },
-  { id: 3, title: "Upload Images" },
-  { id: 4, title: "Specifications" },
+  { id: 3, title: "Specifications" },
+  { id: 4, title: "Upload Images" },
+  { id: 5, title: "Keywords" },
+  { id: 6, title: "Use Cases" },
+  { id: 7, title: "Review" },
 ];
+
+const ProgressBar = ({ currentStep }) => {
+  return (
+    <div className="flex justify-between items-center mb-6">
+      {steps.map((step) => (
+        <div
+          key={step.id}
+          className={`flex-1 h-1 ${
+            step.id <= currentStep ? "bg-green-500" : "bg-gray-300"
+          }`}
+        ></div>
+      ))}
+    </div>
+  );
+};
 
 const EquipmentStepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [categories, setCategories] = useState(["Category 1", "Category 2"]);
+  const [categories, setCategories] = useState([
+    "Surgery",
+    "Diagnostics",
+    "Therapy",
+  ]);
+  const [description, setDescription] = useState("");
+  const [specifications, setSpecifications] = useState({});
+  const [keywords, setKeywords] = useState(["Surgery"]);
+  const [newKeyword, setNewKeyword] = useState("");
+  const [useCases, setUseCases] = useState(["Lorem ipsum dolor sit amet."]);
+  const [newUseCase, setNewUseCase] = useState("");
+  const [images, setImages] = useState(["/img1.png", "/img2.png", "/img3.png"]);
+
+  const handleAddKeyword = () => {
+    if (newKeyword && !keywords.includes(newKeyword)) {
+      setKeywords([...keywords, newKeyword]);
+      setNewKeyword("");
+    }
+  };
+
+  const handleAddUseCase = () => {
+    if (newUseCase) {
+      setUseCases([...useCases, newUseCase]);
+      setNewUseCase("");
+    }
+  };
 
   const handleAddCategory = () => {
-    if (newCategory) {
+    if (newCategory && !categories.includes(newCategory)) {
       setCategories([...categories, newCategory]);
-      setNewCategory(""); // Clear input after adding
+      setNewCategory("");
     }
+  };
+
+  const handleSaveAndUpload = () => {
+    const mockData = {
+      name,
+      category,
+      description,
+      specifications,
+      keywords,
+      useCases,
+      images,
+    };
+    console.log("Review Data:", mockData);
   };
 
   const handleNext = () => {
@@ -31,85 +87,74 @@ const EquipmentStepper = () => {
     if (currentStep > 1) setCurrentStep((prev) => prev - 1);
   };
 
-  const renderStepContent = (step: number) => {
-    switch (step) {
+  const renderStepContent = () => {
+    switch (currentStep) {
       case 1:
+        return (
+          <div className="space-y-4">
+            <h1 className="text-lg font-semibold">Basic Information</h1>
+            <label className="block">
+              <span className="text-sm font-medium">Name</span>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter equipment name"
+                className="w-full border-gray-300 rounded-md shadow-sm mt-1"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium">Category</span>
+              <div className="flex gap-2 mt-1">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="flex-1 border-gray-300 rounded-md shadow-sm"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="New category"
+                  className="flex-1 border-gray-300 rounded-md shadow-sm"
+                />
+                <button
+                  onClick={handleAddCategory}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow"
+                >
+                  Add
+                </button>
+              </div>
+            </label>
+          </div>
+        );
+      // Case 2–7 omitted for brevity; follow a similar structure
+      case 2:
         return (
           <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
             <section className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
-              {/* Progress Bar */}
-              <div className="flex justify-between items-center mb-6">
-                <div className="h-1 flex-1 bg-green-500"></div>
-                <div className="h-1 flex-1 bg-gray-300"></div>
-                <div className="h-1 flex-1 bg-gray-300"></div>
-                <div className="h-1 flex-1 bg-gray-300"></div>
-              </div>
-
-              <h1 className="text-lg font-semibold mb-4">Basic Information</h1>
+              <h1 className="text-lg font-semibold mb-4">
+                Equipment Description
+              </h1>
               <p className="text-gray-600 mb-6">
-                Enter the equipment name and category
+                Provide a detailed description of the equipment.
               </p>
-
-              {/* Form Fields */}
-              <div className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter equipment name"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="category"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Category
-                  </label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <select
-                      id="category"
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                    >
-                      <option value="" disabled>
-                        Select a category
-                      </option>
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value)}
-                      placeholder="New category"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                    />
-                    <button
-                      onClick={handleAddCategory}
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600"
-                    >
-                      Add Category
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Next Button */}
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter description here..."
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                rows={6}
+              />
               <div className="mt-6">
                 <button
                   onClick={handleNext}
@@ -122,57 +167,33 @@ const EquipmentStepper = () => {
           </div>
         );
 
-      case 2:
-        return (
-          <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
-            <section className="bg-white p-6 rounded-lg shadow-md">
-              <h1 className="text-2xl font-bold">Equipment Description</h1>
-              <p className="text-gray-600 mb-4">
-                Provide a detailed description of the equipment.
-              </p>
-              <textarea
-                placeholder="Enter description here..."
-                className="w-full border p-4 rounded-lg shadow-sm"
-                rows={6}
-              ></textarea>
-              <div className="flex justify-end mt-4">
-                <a
-                  href="/equipments/specifications"
-                  className="bg-teal-500 text-white px-6 py-2 rounded-lg"
-                >
-                  Next
-                </a>
-              </div>
-            </section>
-          </div>
-        );
-
       case 3:
         return (
           <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
-            <section className="bg-white p-6 rounded-lg shadow-md">
-              <h1 className="text-2xl font-bold">Upload Images</h1>
-              <p className="text-gray-600 mb-4">
-                Upload clear images of the equipment.
+            <section className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+              <h1 className="text-lg font-semibold mb-4">Specifications</h1>
+              <p className="text-gray-600 mb-6">
+                Add specifications for the equipment.
               </p>
-              <label className="block bg-gray-100 p-6 border border-gray-300 rounded-lg cursor-pointer">
-                <input type="file" className="hidden" />
-                <div className="flex flex-col items-center">
-                  <span className="text-gray-500">Choose Image</span>
-                  <img
-                    src="/placeholder.png"
-                    alt="Upload Placeholder"
-                    className="w-16 h-16 mt-2"
-                  />
-                </div>
-              </label>
-              <div className="flex justify-end mt-4">
-                <a
-                  href="/equipments"
-                  className="bg-teal-500 text-white px-6 py-2 rounded-lg"
+              <textarea
+                value={specifications.details || ""}
+                onChange={(e) =>
+                  setSpecifications({
+                    ...specifications,
+                    details: e.target.value,
+                  })
+                }
+                placeholder="Enter specifications..."
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                rows={6}
+              />
+              <div className="mt-6">
+                <button
+                  onClick={handleNext}
+                  className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
                 >
-                  Finish
-                </a>
+                  Next
+                </button>
               </div>
             </section>
           </div>
@@ -181,23 +202,181 @@ const EquipmentStepper = () => {
       case 4:
         return (
           <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
-            <section className="bg-white p-6 rounded-lg shadow-md">
-              <h1 className="text-2xl font-bold">Specifications</h1>
-              <p className="text-gray-600 mb-4">
-                Enter detailed specifications for the equipment.
+            <section className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+              <h1 className="text-lg font-semibold mb-4">Upload Images</h1>
+              <p className="text-gray-600 mb-6">
+                Upload clear images of the equipment.
               </p>
-              <button className="flex items-center space-x-2 bg-yellow-100 border-yellow-400 text-yellow-600 p-4 rounded-lg shadow">
-                <span className="text-xl">+</span>
-                <span>Add Specification</span>
-              </button>
-              <div className="flex justify-end mt-4">
-                <a
-                  href="/equipments/upload_images"
-                  className="bg-teal-500 text-white px-6 py-2 rounded-lg"
+              <label className="block border-2 border-dashed border-gray-300 p-4 rounded-md cursor-pointer">
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const imageURL = URL.createObjectURL(file);
+                      setImages([...images, imageURL]);
+                    }
+                  }}
+                  className="hidden"
+                />
+                <p className="text-gray-500 text-center">
+                  Click to upload an image
+                </p>
+              </label>
+              <ul className="mt-4 flex gap-4 overflow-x-auto">
+                {images.map((image, index) => (
+                  <li key={index} className="relative w-20 h-20">
+                    <img
+                      src={image}
+                      alt={`Uploaded ${index + 1}`}
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6">
+                <button
+                  onClick={handleNext}
+                  className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
                 >
                   Next
-                </a>
+                </button>
               </div>
+            </section>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
+            <section className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+              <h1 className="text-lg font-semibold mb-4">Keywords</h1>
+              <p className="text-gray-600 mb-6">
+                Add keywords to make the equipment easily searchable.
+              </p>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  value={newKeyword}
+                  onChange={(e) => setNewKeyword(e.target.value)}
+                  placeholder="Enter a keyword"
+                  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                />
+                <button
+                  onClick={handleAddKeyword}
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600"
+                >
+                  Add
+                </button>
+              </div>
+              <ul className="mt-4 flex gap-2 flex-wrap">
+                {keywords.map((keyword, index) => (
+                  <li
+                    key={index}
+                    className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-sm"
+                  >
+                    {keyword}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6">
+                <button
+                  onClick={handleNext}
+                  className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
+                >
+                  Next
+                </button>
+              </div>
+            </section>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
+            <section className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+              <h1 className="text-lg font-semibold mb-4">Use Cases</h1>
+              <p className="text-gray-600 mb-6">
+                List practical applications for the equipment.
+              </p>
+              <textarea
+                value={newUseCase}
+                onChange={(e) => setNewUseCase(e.target.value)}
+                placeholder="Enter a use case"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                rows={3}
+              />
+              <button
+                onClick={handleAddUseCase}
+                className="w-full bg-yellow-500 text-white py-2 rounded-lg shadow hover:bg-yellow-600 mt-2"
+              >
+                Add Use Case
+              </button>
+              <ul className="mt-4 space-y-2">
+                {useCases.map((useCase, index) => (
+                  <li
+                    key={index}
+                    className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-sm"
+                  >
+                    {useCase}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6">
+                <button
+                  onClick={handleNext}
+                  className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
+                >
+                  Next
+                </button>
+              </div>
+            </section>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
+            <section className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+              <h1 className="text-lg font-semibold mb-4">Review</h1>
+              <div className="space-y-4">
+                <div>
+                  <h2 className="font-medium">Basic Information</h2>
+                  <p>Name: {name}</p>
+                  <p>Category: {category}</p>
+                </div>
+                <div>
+                  <h2 className="font-medium">Description</h2>
+                  <p>{description}</p>
+                </div>
+                <div>
+                  <h2 className="font-medium">Keywords</h2>
+                  <ul className="flex gap-2">
+                    {keywords.map((keyword, index) => (
+                      <li
+                        key={index}
+                        className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-sm"
+                      >
+                        {keyword}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h2 className="font-medium">Use Cases</h2>
+                  <ul className="list-disc pl-5">
+                    {useCases.map((useCase, index) => (
+                      <li key={index}>{useCase}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <button
+                onClick={handleSaveAndUpload}
+                className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
+              >
+                Save and Submit
+              </button>
             </section>
           </div>
         );
@@ -208,35 +387,9 @@ const EquipmentStepper = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      {/* Stepper Header */}
-      <div className="flex justify-between items-center mb-6">
-        {steps.map((step) => (
-          <div
-            key={step.id}
-            className={`flex-1 text-center ${
-              step.id === currentStep
-                ? "text-teal-500 font-bold"
-                : "text-gray-400"
-            }`}
-          >
-            <div className="h-2 w-full bg-gray-200 rounded-lg overflow-hidden">
-              <div
-                className={`h-2 ${
-                  step.id <= currentStep ? "bg-teal-500" : "bg-gray-200"
-                }`}
-                style={{ width: `${100 / steps.length}%` }}
-              ></div>
-            </div>
-            <p className="mt-2">{step.title}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Step Content */}
-      <div>{renderStepContent(currentStep)}</div>
-
-      {/* Navigation Buttons */}
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <ProgressBar currentStep={currentStep} />
+      {renderStepContent()}
       <div className="flex justify-between mt-6">
         <button
           onClick={handlePrevious}
@@ -251,7 +404,7 @@ const EquipmentStepper = () => {
         </button>
         <button
           onClick={handleNext}
-          className="px-6 py-2 rounded-lg bg-teal-500 text-white hover:bg-teal-600"
+          className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
         >
           Next
         </button>
