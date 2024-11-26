@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 const steps = [
   { id: 1, title: "Basic Information" },
@@ -12,7 +13,11 @@ const steps = [
   { id: 7, title: "Review" },
 ];
 
-const ProgressBar = ({ currentStep }) => {
+interface ProgressBarProps {
+  currentStep: number;
+}
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
   return (
     <div className="flex justify-between items-center mb-6">
       {steps.map((step) => (
@@ -27,6 +32,10 @@ const ProgressBar = ({ currentStep }) => {
   );
 };
 
+interface Specifications {
+  [key: string]: string | undefined; // Allow dynamic keys with string values
+}
+
 const EquipmentStepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [name, setName] = useState("");
@@ -38,7 +47,7 @@ const EquipmentStepper = () => {
     "Therapy",
   ]);
   const [description, setDescription] = useState("");
-  const [specifications, setSpecifications] = useState({});
+  const [specifications, setSpecifications] = useState<Specifications>({});
   const [keywords, setKeywords] = useState(["Surgery"]);
   const [newKeyword, setNewKeyword] = useState("");
   const [useCases, setUseCases] = useState(["Lorem ipsum dolor sit amet."]);
@@ -175,18 +184,49 @@ const EquipmentStepper = () => {
               <p className="text-gray-600 mb-6">
                 Add specifications for the equipment.
               </p>
-              <textarea
-                value={specifications.details || ""}
-                onChange={(e) =>
-                  setSpecifications({
-                    ...specifications,
-                    details: e.target.value,
-                  })
-                }
-                placeholder="Enter specifications..."
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                rows={6}
-              />
+              <div>
+                <h2 className="text-xl font-bold mb-4">Specifications</h2>
+                <button
+                  onClick={() =>
+                    setSpecifications({
+                      ...specifications,
+                      [`spec${Object.keys(specifications).length + 1}`]: "",
+                    })
+                  }
+                  className="flex items-center space-x-2 bg-yellow-100 border-yellow-400 text-yellow-600 p-4 rounded-lg shadow"
+                >
+                  <span className="text-xl">+</span>
+                  <span>Add Specification</span>
+                </button>
+              </div>
+              <div className="mt-4 space-y-4">
+                {Object.keys(specifications).map((key, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={specifications[key]}
+                      onChange={(e) =>
+                        setSpecifications({
+                          ...specifications,
+                          [key]: e.target.value,
+                        })
+                      }
+                      placeholder={`Specification ${index + 1}`}
+                      className="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    />
+                    <button
+                      onClick={() => {
+                        const updatedSpecs = { ...specifications };
+                        delete updatedSpecs[key];
+                        setSpecifications(updatedSpecs);
+                      }}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
               <div className="mt-6">
                 <button
                   onClick={handleNext}
@@ -211,7 +251,7 @@ const EquipmentStepper = () => {
                 <input
                   type="file"
                   onChange={(e) => {
-                    const file = e.target.files[0];
+                    const file = e.target.files ? e.target.files[0] : null; // Check if files is not null
                     if (file) {
                       const imageURL = URL.createObjectURL(file);
                       setImages([...images, imageURL]);
@@ -219,6 +259,7 @@ const EquipmentStepper = () => {
                   }}
                   className="hidden"
                 />
+
                 <p className="text-gray-500 text-center">
                   Click to upload an image
                 </p>
@@ -226,9 +267,11 @@ const EquipmentStepper = () => {
               <ul className="mt-4 flex gap-4 overflow-x-auto">
                 {images.map((image, index) => (
                   <li key={index} className="relative w-20 h-20">
-                    <img
+                    <Image
                       src={image}
                       alt={`Uploaded ${index + 1}`}
+                      width={80} // specify width
+                      height={80} // specify height
                       className="w-full h-full object-cover rounded-md"
                     />
                   </li>
