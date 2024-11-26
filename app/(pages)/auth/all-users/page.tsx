@@ -8,6 +8,7 @@ import { faEye, faTrash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import Breadcrumbs from "@/components/ui/BreadCrumbs";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { BASE_URL } from "@/api/base-url"; // Import BASE_URL
 
 const AllUsers = () => {
   const breadcrumbs = [
@@ -32,7 +33,7 @@ const AllUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("https://api.example.com/users"); // Replace with your API URL
+        const response = await fetch(`${BASE_URL}users`); // Use BASE_URL
         const data = await response.json();
         setUsers(data);
       } catch (err) {
