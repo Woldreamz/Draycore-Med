@@ -1,14 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Layout from "app/(root)/layout";
 import Navbar from "@/components/Navbar";
 import Breadcrumbs from "@/components/ui/BreadCrumbs";
 
+// Define the type for the user object
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  occupation: string;
+  address: string;
+  phone: string;
+}
+
 const UserDetailsPage = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const breadcrumbs = [
     { name: "Account", href: "/auth" },
@@ -18,7 +28,7 @@ const UserDetailsPage = () => {
 
   // Simulated fetch call to get user data
   useEffect(() => {
-    const fetchedUser = {
+    const fetchedUser: User = {
       firstName: "John",
       lastName: "Chao",
       email: "johnchao@gmail.com",
@@ -29,20 +39,24 @@ const UserDetailsPage = () => {
     setUser(fetchedUser);
   }, []);
 
-  const handleInputChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (user) {
+      setUser({ ...user, [e.target.name]: e.target.value });
+    }
   };
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleProfileImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleProfileImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result); // Store image as base64 string
+        if (typeof reader.result === "string") {
+          setProfileImage(reader.result); // Store image as a base64 string
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -54,13 +68,13 @@ const UserDetailsPage = () => {
         <Navbar />
       </Layout>
 
-      <div className="flex-1 lg:ml-[20%] p-6 space-y-6 pt-20">
+      <div className="flex-1 lg:ml-[25%] p-6 space-y-6 pt-20">
         <header className="flex justify-between items-center p-4 bg-white shadow-md">
           <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
           </div>
           <button
-            onClick={() => (window.location.href = "/auth")}
+            onClick={() => (window.location.href = "/auth/all-users")}
             className="bg-gray-200 px-4 py-2 rounded-md text-gray-600 hover:bg-gray-300"
           >
             Back
