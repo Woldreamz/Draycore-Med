@@ -32,8 +32,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
   );
 };
 
+// Modify the Specifications type to allow dynamic properties
 interface Specifications {
-  [key: string]: string | undefined; // Allow dynamic keys with string values
+  [key: string]: string;
 }
 
 const EquipmentStepper = () => {
@@ -52,7 +53,18 @@ const EquipmentStepper = () => {
   const [newKeyword, setNewKeyword] = useState("");
   const [useCases, setUseCases] = useState(["Lorem ipsum dolor sit amet."]);
   const [newUseCase, setNewUseCase] = useState("");
-  const [images, setImages] = useState(["/img1.png", "/img2.png", "/img3.png"]);
+  const [images, setImages] = useState([
+    "/shears.png",
+    "/stetoscope.png",
+    "/chemobed.png",
+  ]);
+
+  const handleAddCategory = () => {
+    if (newCategory && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+      setNewCategory("");
+    }
+  };
 
   const handleAddKeyword = () => {
     if (newKeyword && !keywords.includes(newKeyword)) {
@@ -62,16 +74,9 @@ const EquipmentStepper = () => {
   };
 
   const handleAddUseCase = () => {
-    if (newUseCase) {
+    if (newUseCase && !useCases.includes(newUseCase)) {
       setUseCases([...useCases, newUseCase]);
       setNewUseCase("");
-    }
-  };
-
-  const handleAddCategory = () => {
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
-      setNewCategory("");
     }
   };
 
@@ -146,7 +151,6 @@ const EquipmentStepper = () => {
             </label>
           </div>
         );
-      // Case 2–7 omitted for brevity; follow a similar structure
       case 2:
         return (
           <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
@@ -175,7 +179,6 @@ const EquipmentStepper = () => {
             </section>
           </div>
         );
-
       case 3:
         return (
           <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
@@ -211,16 +214,20 @@ const EquipmentStepper = () => {
                           [key]: e.target.value,
                         })
                       }
-                      placeholder={`Specification ${index + 1}`}
-                      className="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                      className="border-gray-300 rounded-md shadow-sm"
                     />
                     <button
-                      onClick={() => {
-                        const updatedSpecs = { ...specifications };
-                        delete updatedSpecs[key];
-                        setSpecifications(updatedSpecs);
-                      }}
-                      className="text-red-500 hover:text-red-700"
+                      onClick={() =>
+                        setSpecifications(
+                          Object.keys(specifications)
+                            .filter((spec) => spec !== key)
+                            .reduce<Specifications>((obj, spec) => {
+                              obj[spec] = specifications[spec];
+                              return obj;
+                            }, {}),
+                        )
+                      }
+                      className="text-red-500 hover:text-red-600"
                     >
                       Remove
                     </button>
@@ -379,48 +386,63 @@ const EquipmentStepper = () => {
 
       case 7:
         return (
-          <div className="flex-1 lg:ml-[20%] p-6 pr-40 space-y-6 pt-20">
-            <section className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
-              <h1 className="text-lg font-semibold mb-4">Review</h1>
-              <div className="space-y-4">
-                <div>
-                  <h2 className="font-medium">Basic Information</h2>
-                  <p>Name: {name}</p>
-                  <p>Category: {category}</p>
-                </div>
-                <div>
-                  <h2 className="font-medium">Description</h2>
-                  <p>{description}</p>
-                </div>
-                <div>
-                  <h2 className="font-medium">Keywords</h2>
-                  <ul className="flex gap-2">
-                    {keywords.map((keyword, index) => (
-                      <li
-                        key={index}
-                        className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-sm"
-                      >
-                        {keyword}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h2 className="font-medium">Use Cases</h2>
-                  <ul className="list-disc pl-5">
-                    {useCases.map((useCase, index) => (
-                      <li key={index}>{useCase}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold">Review Your Equipment</h2>
+            <p>
+              <strong>Name:</strong> {name}
+            </p>
+            <p>
+              <strong>Category:</strong> {category}
+            </p>
+            <p>
+              <strong>Description:</strong> {description}
+            </p>
+            <p>
+              <strong>Specifications:</strong>
+            </p>
+            <ul>
+              {Object.entries(specifications).map(([key, value]) => (
+                <li key={key}>
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
+            <p>
+              <strong>Keywords:</strong> {keywords.join(", ")}
+            </p>
+            <p>
+              <strong>Use Cases:</strong> {useCases.join(", ")}
+            </p>
+            <p>
+              <strong>Uploaded Images:</strong>
+            </p>
+            <ul className="flex gap-4">
+              {images.map((image, index) => (
+                <li key={index} className="relative w-20 h-20">
+                  <Image
+                    src={image}
+                    alt={`Uploaded ${index + 1}`}
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex gap-4">
+              <button
+                onClick={handlePrevious}
+                className="w-full bg-gray-400 text-white py-2 rounded-lg shadow hover:bg-gray-500"
+              >
+                Back
+              </button>
               <button
                 onClick={handleSaveAndUpload}
-                className="w-full mt-4 bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
+                className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
               >
-                Save and Submit
+                Submit
               </button>
-            </section>
+            </div>
           </div>
         );
 
