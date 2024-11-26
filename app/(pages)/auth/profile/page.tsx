@@ -19,6 +19,7 @@ const UserDetailsPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const breadcrumbs = [
     { name: "Account", href: "/auth" },
@@ -62,13 +63,22 @@ const UserDetailsPage = () => {
     }
   };
 
+  // Simulated delete user function
+  const handleDeleteUser = async () => {
+    // Simulate an API call to delete the user
+    console.log("Deleting user...");
+    setShowDeleteModal(false);
+    // Perform API request to delete user (uncomment in real implementation)
+    // await fetch(`/api/deleteUser/${user?.email}`, { method: "DELETE" });
+  };
+
   return (
     <div className="flex flex-col bg-gray-100 w-full lg:grid lg:grid-cols-[auto,1fr] min-h-screen text-gray-800">
       <Layout>
         <Navbar />
       </Layout>
 
-      <div className="flex-1 lg:ml-[25%] p-6 space-y-6 pt-20">
+      <div className="flex-1 lg:ml-[20%] p-6 space-y-6 pt-20">
         <header className="flex justify-between items-center p-4 bg-white shadow-md">
           <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -139,11 +149,39 @@ const UserDetailsPage = () => {
         </section>
 
         <div className="flex justify-end">
-          <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
             Delete User
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Are you sure you want to delete this user?
+            </h3>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "app/(root)/layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +23,27 @@ const AllUsers = () => {
   }>(null);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [users, setUsers] = useState<
+    { name: string; occupation: string; location: string }[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("https://api.example.com/users"); // Replace with your API URL
+        const data = await response.json();
+        setUsers(data);
+      } catch (err) {
+        setError("Failed to fetch users.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleViewUser = (user: {
     name: string;
@@ -48,21 +69,8 @@ const AllUsers = () => {
     }
   };
 
-  const users = [
-    {
-      name: "Angela Bassett",
-      occupation: "Oncologist",
-      location: "Los Angeles, CA",
-    },
-    {
-      name: "Rahmin Dunis",
-      occupation: "Oncologist",
-      location: "Mumbai, India",
-    },
-    { name: "Joe Chin", occupation: "Gynecologist", location: "Cuba" },
-    { name: "Halimar Abubakar", occupation: "Optician", location: "Kiev" },
-    { name: "Gustavo Fring", occupation: "Dentist", location: "Tokyo" },
-  ];
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="flex flex-col bg-gray-100 w-full lg:grid lg:grid-cols-[auto,1fr] min-h-screen text-gray-800">
