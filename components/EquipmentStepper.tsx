@@ -32,7 +32,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
   );
 };
 
-// Modify the Specifications type to allow dynamic properties
 interface Specifications {
   [key: string]: string;
 }
@@ -58,6 +57,11 @@ const EquipmentStepper = () => {
     "/stetoscope.png",
     "/chemobed.png",
   ]);
+
+  // Modal state for success/cancel
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"success" | "cancel">("success");
 
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
@@ -91,6 +95,15 @@ const EquipmentStepper = () => {
       images,
     };
     console.log("Review Data:", mockData);
+    setModalMessage("Equipment submitted successfully!");
+    setModalType("success");
+    setModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setModalMessage("Equipment submission canceled!");
+    setModalType("cancel");
+    setModalVisible(true);
   };
 
   const handleNext = () => {
@@ -441,6 +454,12 @@ const EquipmentStepper = () => {
                 className="w-full bg-green-500 text-white py-2 rounded-lg shadow hover:bg-green-600"
               >
                 Submit
+              </button>
+              <button
+                onClick={handleCancel}
+                className="w-full bg-red-500 text-white py-2 rounded-lg shadow hover:bg-red-600"
+              >
+                Cancel
               </button>
             </div>
           </div>

@@ -1,182 +1,105 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import EquipmentList from "@/components/equipment/cardList";
 import { MinorNav } from "@/components/equipment/minorNav";
-import { useState, useEffect } from "react";
+import add from "@/public/icons/add.svg";
+import { equips } from "@/components/equipment/data"; // Simulated static data
+import React from "react";
 import Layout from "app/(root)/layout";
 import Navbar from "@/components/Navbar";
+import { Equipment } from "@/components/equipment/types"; // Assuming you have a types file
 
 const EquipmentsPage = () => {
-  const [equipmentData, setEquipmentData] = useState([]); // State for equipment list
-  const [filteredData, setFilteredData] = useState([]); // State for filtered list
+  // State variables
+  const [equipmentData, setEquipmentData] = useState<Equipment[]>(equips);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Simulated API Call
   useEffect(() => {
-    const fetchEquipment = async () => {
-      const mockData = [
-        {
-          id: 1,
-          name: "X-Ray Machine",
-          category: "Medical",
-          status: "Available",
-        },
-        { id: 2, name: "Ultrasound", category: "Medical", status: "In Use" },
-        { id: 3, name: "Ventilator", category: "ICU", status: "Maintenance" },
-        {
-          id: 4,
-          name: "Defibrillator",
-          category: "Emergency",
-          status: "Available",
-        },
-      ];
-      setEquipmentData(mockData);
-      setFilteredData(mockData);
-    };
-    fetchEquipment();
+    // Simulate fetching data
+    setLoading(true);
+    setTimeout(() => {
+      // Simulate error for testing
+      if (Math.random() < 0.1) {
+        setError("Failed to load equipment data.");
+        setLoading(false);
+      } else {
+        setEquipmentData(equips);
+        setLoading(false);
+      }
+    }, 1500); // Simulate 1.5 seconds fetch time
   }, []);
 
-  // Filter and Search Logic
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-    const filtered = equipmentData.filter((item) =>
-      item.name.toLowerCase().includes(query),
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleFilter = (category) => {
-    const filtered =
-      category === "All"
-        ? equipmentData
-        : equipmentData.filter((item) => item.category === category);
-    setFilteredData(filtered);
-  };
-
-  const handleAddEquipment = (newEquipment) => {
-    setEquipmentData([...equipmentData, newEquipment]);
-    setFilteredData([...filteredData, newEquipment]);
-    setShowAddModal(false); // Close modal after adding
-  };
+  // Filter equipment based on search query
+  const filteredEquipments = equipmentData.filter((equipment) =>
+    equipment.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <div className="flex bg-gray-100 flex-col lg:flex-row min-h-screen">
       {/* Sidebar */}
       <Layout>
         <div className="hidden md:block md:w-1/4 bg-white shadow-lg">
-          {/* Sidebar content if needed */}
+          {/* Sidebar content */}
         </div>
         <Navbar />
       </Layout>
 
       {/* Main Content */}
       <div className="flex-1 lg:ml-[20%] p-6 space-y-6 pt-20">
+        {/* Header and Search */}
         <section className="bg-white p-6 rounded-lg shadow-md pt-10 pr-20">
           <MinorNav
             heading="Equipment List"
             btn="Add new"
-            src="/icons/add.svg"
+            src={add}
+            link="/equipments/basic_information"
             alt="add new"
-            onClick={() => setShowAddModal(true)}
           />
-
-          {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row justify-between items-center mt-4">
+          {/* Search Bar */}
+          <div className="mt-4 flex justify-between items-center">
             <input
               type="text"
+              className="p-2 rounded-md border border-gray-300 w-full max-w-xs"
               placeholder="Search equipment..."
               value={searchQuery}
-              onChange={handleSearch}
-              className="w-full md:w-1/2 px-4 py-2 border rounded-md"
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="flex gap-4 mt-4 md:mt-0">
-              {["All", "Medical", "ICU", "Emergency"].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => handleFilter(category)}
-                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md"
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Equipment List */}
-          <div className="flex flex-wrap gap-4 mt-4">
-            {filteredData.length > 0 ? (
-              <EquipmentList data={filteredData} />
-            ) : (
-              <p className="text-gray-500">No equipment found.</p>
-            )}
           </div>
         </section>
-      </div>
 
-      {/* Add Equipment Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
-              Add New Equipment
-            </h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const newEquipment = {
-                  id: equipmentData.length + 1,
-                  name: formData.get("name"),
-                  category: formData.get("category"),
-                  status: "Available",
-                };
-                handleAddEquipment(newEquipment);
-              }}
-            >
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-gray-600 mb-1">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 mb-1">Category</label>
-                  <select
-                    name="category"
-                    className="w-full px-3 py-2 border rounded-md"
-                    required
-                  >
-                    <option value="Medical">Medical</option>
-                    <option value="ICU">ICU</option>
-                    <option value="Emergency">Emergency</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex justify-end mt-4 space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        {/* Equipment List Section */}
+        <section className="bg-white p-6 rounded-lg shadow-md pt-6">
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-100 text-red-800 p-4 rounded-md mb-4">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading ? (
+            <div className="flex justify-center items-center">
+              <div className="w-12 h-12 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-4 mt-4">
+              <EquipmentList data={filteredEquipments} />
+            </div>
+          )}
+
+          {/* Pagination */}
+          {!loading && !error && (
+            <div className="flex justify-center mt-6">
+              <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Load More
+              </button>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 };
