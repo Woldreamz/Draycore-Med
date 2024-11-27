@@ -25,21 +25,7 @@ interface TopUser {
 }
 
 const Accounts = () => {
-  const [users, setUsers] = useState<User[]>([
-    {
-      name: "Angela Bassett",
-      occupation: "Oncologist",
-      location: "Los Angeles, CA",
-    },
-    {
-      name: "Rahmin Dunis",
-      occupation: "Oncologist",
-      location: "Mumbai, India",
-    },
-    { name: "Joe Chin", occupation: "Gynecologist", location: "Cuba" },
-    { name: "Halimar Abubakar", occupation: "Optician", location: "Kiev" },
-    { name: "Gustavo Fring", occupation: "Dentist", location: "Tokyo" },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const topUsersByMonth: Record<string, TopUser[]> = {
     January: [

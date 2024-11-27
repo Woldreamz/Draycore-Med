@@ -45,19 +45,6 @@ const EquipmentDetails = () => {
     setNotification("Image deleted successfully!");
   };
 
-  // Handle Equipment Detail Update
-  const handleDetailUpdate = (updatedDetails: any) => {
-    setEquipmentDetails(updatedDetails);
-    setNotification("Details updated successfully!");
-  };
-
-  // Handle Delete Equipment
-  const handleDeleteEquipment = () => {
-    setShowDeleteModal(false);
-    setNotification("Equipment deleted successfully!");
-    // Simulate deletion
-  };
-
   useEffect(() => {
     if (notification) {
       setTimeout(() => setNotification(null), 3000); // Hide notification after 3 seconds

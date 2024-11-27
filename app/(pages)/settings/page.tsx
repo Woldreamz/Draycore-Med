@@ -4,11 +4,7 @@ import { useState } from "react";
 import BaseLayout from "components/BaseLayout"; // Ensure this path matches your folder structure
 
 const Settings = () => {
-  const [profile, setProfile] = useState({
-    name: "Ella Barris",
-    email: "ella.barris@example.com",
-    phone: "+1234567890",
-  });
+  const [profile, setProfile] = useState({});
 
   const [preferences, setPreferences] = useState({
     notifications: true,

@@ -1,7 +1,6 @@
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import Link from "next/link";
 import { VerificationProvider } from "@/context/VerificationContext";
 import Head from "next/head";
 
