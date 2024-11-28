@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface FormState {
   name: string;
@@ -46,6 +47,7 @@ interface Specifications {
 }
 
 const EquipmentStepper = () => {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -151,6 +153,8 @@ const EquipmentStepper = () => {
           //redirect to the email verification page after sucessfull submission
           const responseData = await response.json();
           console.log(responseData);
+          alert("Equipment created successfully");
+          router.push("/equipments")
         }else {
           const errorData = await response.json();
           console.error("Error: Failed to submit the form", errorData);
