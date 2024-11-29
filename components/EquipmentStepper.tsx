@@ -73,7 +73,7 @@ const EquipmentStepper = () => {
     name: '',
     description: '',
     category: '',
-    image: '',
+    image: "",
     tags: [],
     useCases: ''
   });
@@ -86,9 +86,11 @@ const EquipmentStepper = () => {
         const tagsArray = value.split(',').map((tag) => tag.trim());
         setTag(tagsArray); // Fix: directly set the array instead of using spread operator
         setForm({...form, tags: tagsArray});
-    }else if (name === 'image' && files && files.length>0) {
-        // const file = files[0];
-        setForm({...form, image: files[0]});
+    }else if (name === 'image' && files) {
+        // const fileArray = Array.from(files);
+        // setForm((prevForm) => ({...prevForm, image:[...prevForm.image, ...fileArray]}));
+        // const imageURL = URL.createObjectURL(files[0]);
+        // setImages([...images, imageURL]);
     } else{
         setForm({...form, [name]: value }); 
     }
@@ -134,9 +136,10 @@ const EquipmentStepper = () => {
   formData.append("useCases", form.useCases);
 
   // Append the file (if any)
-   if (form.image instanceof File) {
+  if (form.image instanceof File) {
     formData.append("files", form.image);
-   }
+  }
+   
     console.log(formData);
     
     
@@ -144,7 +147,7 @@ const EquipmentStepper = () => {
         const response = await fetch('https://medequip-api.vercel.app/api/equipment/',{
           method: 'POST',
           headers: {
-            'Accept': 'application/json',
+             Accept: 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
           body: formData,
@@ -345,6 +348,8 @@ const EquipmentStepper = () => {
                       setImages([...images, imageURL]);
                     }
                   }}
+                  // accept="image/*"
+                  // name="image"
                   className="hidden"
                 />
 

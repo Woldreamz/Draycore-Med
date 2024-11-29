@@ -11,13 +11,18 @@ interface FormState {
     image: File | string;
     tags: string[];
     useCases: string;
+}
+  interface UpdateEquipmentProps {
+    closeModal: () => void;
   }
 
-const UpdateEquipment = () => {
+const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
   const searchParams = useSearchParams();
   const id = searchParams?.get('id');
+  const router = useRouter();
   console.log(id);
   const [tag, setTag] = useState<string[]>([]);
+  const [images, setImages] = useState([]);
   const [form, setForm] = useState<FormState>({
     name: '',
     description: '',
@@ -77,6 +82,7 @@ const UpdateEquipment = () => {
           //redirect to the email verification page after sucessfull submission
           const responseData = await response.json();
           console.log(responseData);
+          router.push("/equipments");
         }else {
           const errorData = await response.json();
           console.error("Error: Failed to submit the form", errorData);
@@ -138,7 +144,14 @@ const UpdateEquipment = () => {
              name='image' 
              className='mb-3 text-xs' 
              placeholder='image' 
-             onChange={handleChange}
+             onChange={(e) => {
+              const file = e.target.files ? e.target.files[0] : null;
+              if (file) {
+                const imageURL = URL.createObjectURL(file);
+                setImages([...images, imageURL]);
+              }
+              
+            }}
            />
 
             <InputField 
@@ -162,12 +175,21 @@ const UpdateEquipment = () => {
               onChange={handleChange}
             />
 
+           <div className="flex justify-between mt-4">
+            <Button
+              typeProperty="button"
+              label="Cancel"
+              onClick={closeModal}
+              otherStyles="bg-red-500 text-white"
+            />
+
             <Button 
               typeProperty="submit"
               label='Create Equipment'
               otherStyles='w-full'
               onClick={handleSubmit}
             />
+            </div>
           </form>
 
         </div>

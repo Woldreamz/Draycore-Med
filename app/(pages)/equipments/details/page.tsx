@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import shears from "@/public/Images/shears.png";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
+import UpdateEquipment from "../UpdateEquipment/page";
 
 
 const EquipmentDetails = () => {
@@ -22,6 +23,8 @@ const EquipmentDetails = () => {
     tags: [],
     useCases: ""
   });
+  const [allImages, setAllImages] = useState([]);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<number | null>(null);
@@ -50,7 +53,8 @@ const EquipmentDetails = () => {
         const data = await response.json();
         console.log(data);
         setDetails(data);
-        console.log(details);
+        setAllImages(data.images);
+        console.log(details, allImages);
       } catch (error) {
         console.error(error);
       }
@@ -71,9 +75,9 @@ const EquipmentDetails = () => {
               },
             }
           );
-          // if (!res.ok) throw new Error('Failed to delete user', res.json);
-          // const data = await res.json();
-          // console.log(data);
+          if (!res.ok) throw new Error('Failed to delete user', res.json);
+          const data = await res.json();
+          console.log(data);
           router.back();
         } catch (error) {
           console.error(error);
@@ -83,6 +87,18 @@ const EquipmentDetails = () => {
     };
     deleteUser();
   }, [response, selectedEquipment]);
+
+  // Close modal function
+  const closeModal = () => {
+    setShowUpdateModal(false);
+  };
+
+  // Save changes and close modal
+  const handleSaveChanges = () => {
+    // Simulate saving the updated data
+    console.log("Changes saved!");
+    setShowUpdateModal(false);
+  };
   
 
   const data = [
@@ -100,6 +116,7 @@ const EquipmentDetails = () => {
     length: "15cm",
     width: "30cm",
     keywords: [details.tags],
+    useCases: details.useCases
   };
 
   return (
@@ -129,10 +146,29 @@ const EquipmentDetails = () => {
           </div>
           <div className="flex flex-wrap gap-4 mt-4">
             <EquipmentDetail {...detail} />
-            <EquipmentImageList list={data} />
+            <EquipmentImageList list={allImages.length == 0 ? data : allImages} />
           </div>
         </section>
       </div>
+
+       {/* Update Equipment Modal */}
+       {showUpdateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative w-full max-w-lg bg-white rounded-lg shadow-lg p-6">
+            <button
+              className="absolute top-2 right-2 text-gray-500"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+            <UpdateEquipment
+              equipment={details} // Pass current equipment details
+              onClose={closeModal}
+              onSave={handleSaveChanges} // Trigger save functionality
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

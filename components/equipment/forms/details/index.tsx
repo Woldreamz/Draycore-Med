@@ -12,6 +12,7 @@ interface Details {
   length: string
   width: string
   keywords: string[]
+  useCases: string
 }
 
 const EquipmentDetail = (props: Details) => {
@@ -41,6 +42,7 @@ const EquipmentDetail = (props: Details) => {
     length: '',
     width: '',
     age: '',
+    useCases: ''
   });
 
   function handleChange(event:React.ChangeEvent<HTMLInputElement>) {
@@ -96,7 +98,7 @@ const EquipmentDetail = (props: Details) => {
               <textarea  id='description' className='focus:outline-teal-600 w-full h-30 resize-none' value={props.description} onChange={handleChange} ></textarea>
             </div>
         </FormGroup>
-        <FormGroup heading='Specifications & Keywords'>
+        <FormGroup heading='Specifications'>
             <div className='w-[48%]'>
               <label htmlFor='age'>Age</label>
               <InputBtn name='age' value={props.age} onChange={handleChange}/>
@@ -113,10 +115,16 @@ const EquipmentDetail = (props: Details) => {
               <label htmlFor='width'>Width</label>
               <InputBtn name='width' value={props.width} onChange={handleChange}/>
             </div>
-            <div className='w-[97%]'>
+        </FormGroup>
+        <FormGroup heading="Keywords & Use Cases">
+        <div className='w-[97%]'>
               <label htmlFor='keywords'>Keywords</label>
               <input value={props.keywords.map((item) => item)} className='focus:outline-teal-600 rounded border border-solid w-full' type='text' id='keywords' name='keywords' onChange={handleChange}/>
             </div>
+          <div className='w-[97%]'>
+            <label htmlFor='useCases'>Use Cases</label>
+            <textarea  id='useCases' className='focus:outline-teal-600 w-full h-30 resize-none' value={props.useCases} onChange={handleChange} ></textarea>
+          </div>
         </FormGroup>
     </form>
   )

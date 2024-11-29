@@ -3,7 +3,7 @@ import Image, {StaticImageData} from 'next/image'
 
 
 export interface IconProps {
-    src: StaticImageData; 
+    src: string; 
     alt: string;
 }
 
