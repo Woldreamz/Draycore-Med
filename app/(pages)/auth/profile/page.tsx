@@ -18,6 +18,8 @@ const UserDetailsPage = () => {
     lastname: '',
     email: '',
     phone: '',
+    occupation: '',
+    address: '',
     role: '',
     createdAt: '',
     updatedAt: '',
@@ -188,7 +190,7 @@ const UserDetailsPage = () => {
                 <label className="block text-gray-600 mb-1">Occupation</label>
                 <input
                   type="text"
-                  value="Gynecologist"
+                  value={user.occupation}
                   readOnly
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
                 />
@@ -197,7 +199,7 @@ const UserDetailsPage = () => {
                 <label className="block text-gray-600 mb-1">Address</label>
                 <input
                   type="text"
-                  value="San Jose, California, USA"
+                  value={user.address}
                   readOnly
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
                 />

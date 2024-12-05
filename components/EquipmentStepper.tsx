@@ -86,11 +86,8 @@ const EquipmentStepper = () => {
         const tagsArray = value.split(',').map((tag) => tag.trim());
         setTag(tagsArray); // Fix: directly set the array instead of using spread operator
         setForm({...form, tags: tagsArray});
-    }else if (name === 'image' && files) {
-        // const fileArray = Array.from(files);
-        // setForm((prevForm) => ({...prevForm, image:[...prevForm.image, ...fileArray]}));
-        // const imageURL = URL.createObjectURL(files[0]);
-        // setImages([...images, imageURL]);
+    }else if (name === 'image' && files && files.length>0) {
+      setForm({...form, image: files[0]});
     } else{
         setForm({...form, [name]: value }); 
     }
@@ -341,15 +338,16 @@ const EquipmentStepper = () => {
               <label className="block border-2 border-dashed border-gray-300 p-4 rounded-md cursor-pointer">
                 <input
                   type="file"
-                  onChange={(e) => {
-                    const file = e.target.files ? e.target.files[0] : null; // Check if files is not null
-                    if (file) {
-                      const imageURL = URL.createObjectURL(file);
-                      setImages([...images, imageURL]);
-                    }
-                  }}
-                  // accept="image/*"
-                  // name="image"
+                  onChange={
+                    handleChange
+                    // const file = e.target.files ? e.target.files[0] : null; // Check if files is not null
+                    // if (file) {
+                    //   const imageURL = URL.createObjectURL(file);
+                    //   setImages([...images, imageURL]);
+                    // }
+                  }
+                  accept="image/*"
+                  name="image"
                   className="hidden"
                 />
 

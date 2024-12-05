@@ -22,7 +22,7 @@ const EquipmentsPage = () => {
         if (!response.ok) throw new Error('Failed to fetch equipment', response.json);
         const data = await response.json();
         console.log(data);
-        setEquipmentList(data);
+        setEquipmentList(data.data);
       } catch (error) {
         console.error(error);
       }
@@ -32,9 +32,9 @@ const EquipmentsPage = () => {
   },[]);
 
   // Filter equipment based on search query
-  const filteredEquipments = equipmentList.filter((equipment) =>
-    equipment.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // const filteredEquipments = equipmentList.filter((equipment) =>
+  //   equipment.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  // );
 
   return (
     <div className="flex bg-gray-100 flex-col lg:flex-row min-h-screen">
@@ -85,7 +85,7 @@ const EquipmentsPage = () => {
             </div>
           ) : (
             <div className="flex flex-wrap gap-4 mt-4">
-              <EquipmentList data={filteredEquipments} />
+              <EquipmentList data={equipmentList} />
             </div>
           )}
 

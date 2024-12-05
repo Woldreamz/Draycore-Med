@@ -1,15 +1,13 @@
 
 import React from 'react'
 import EquipmentCard, { CardProps } from '../card';
-import { useRouter } from 'next/navigation';
 
 
 interface List {
-    data: CardProps[]
+  data: CardProps[]
 }
 
 const EquipmentList = (props:List) => {
-  const router = useRouter();
 
   return (
     <section className='flex flex-wrap w-[90%] lg:pl-[10%] lg:pt-10 m-auto bg-transparent justify-start gap-4'>

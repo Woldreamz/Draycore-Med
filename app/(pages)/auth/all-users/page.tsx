@@ -115,23 +115,25 @@ const AllUsers = () => {
               <thead>
                 <tr className="bg-gray-200">
                   <th className="p-2 md:p-4 text-xs md:text-sm">Name</th>
-                  <th className="p-2 md:p-4 text-xs md:text-sm">Email</th>
-                  <th className="p-2 md:p-4 text-xs md:text-sm">Phone</th>
+                  <th className="p-2 md:p-4 text-xs md:text-sm">Occupation</th>
+                  <th className="p-2 md:p-4 text-xs md:text-sm">Location</th>
                   <th className="p-2 md:p-4 text-xs md:text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {/* Table rows */}
-                {usersList.map((user: { id: number; firstname: string; lastname: string; email: string; phone: string }, index) => (
+                {usersList.map((user: { 
+                  id: number; firstname: string; lastname: string; occupation: string; address: string 
+                 }, index) => (
                   <tr key={index} className="border-t">
                     <td className="p-2 md:p-4 text-xs md:text-sm">
                       {user.firstname} {user.lastname}
                     </td>
                     <td className="p-2 md:p-4 text-xs md:text-sm">
-                      {user.email}
+                      {user.occupation}
                     </td>
                     <td className="p-2 md:p-4 text-xs md:text-sm">
-                      {user.phone}
+                      {user.address}
                     </td>
                     <td className="p-2 md:p-4 flex space-x-2 text-xs md:text-sm">
                       <button 

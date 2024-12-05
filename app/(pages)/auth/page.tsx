@@ -139,20 +139,22 @@ const Accounts = () => {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="p-3 text-left text-gray-600">Name</th>
-                  <th className="p-3 text-left text-gray-600">Email</th>
-                  <th className="p-3 text-left text-gray-600">Phone</th>
+                  <th className="p-3 text-left text-gray-600">Occupation</th>
+                  <th className="p-3 text-left text-gray-600">Location</th>
                   <th className="p-3 text-left text-gray-600">Actions</th>
                 </tr>
               </thead>
               <tbody className="rounded-lg">
-                {usersList.slice(0,5).map((user: { id: number; firstname: string; lastname: string; email: string; phone: string }, index) => (
+                {usersList.slice(0,5).map((user: {
+                   id: number; firstname: string; lastname: string; occupation: string; address: string 
+                  }, index) => (
                   <tr
                     key={index}
                     className="border-t hover:bg-gray-50 rounded-lg"
                   >
                     <td className="p-3">{user.firstname} {user.lastname}</td>
-                    <td className="p-3">{user.email}</td>
-                    <td className="p-3">{user.phone}</td>
+                    <td className="p-3">{user.occupation}</td>
+                    <td className="p-3">{user.address}</td>
                     <td className="p-3 flex space-x-3">
                       <button onClick={() => router.push(`/auth/profile?id=${encodeURIComponent(user.id)}`)} 
                        className="text-green-500 bg-gray-100 hover:text-green-700 rounded-md"
