@@ -64,7 +64,7 @@ const EquipmentDetails = () => {
   },[id]);
 
   useEffect(() => {
-    const deleteUser = async () => {
+    const deleteEquipment = async () => {
       if (response === "Yes" && selectedEquipment !== null) {
         try {
           const res = await fetch(`https://medequip-api.vercel.app/api/equipment/${selectedEquipment}`,
@@ -76,8 +76,8 @@ const EquipmentDetails = () => {
             }
           );
           if (!res.ok) throw new Error('Failed to delete user', res.json);
-          const data = await res.json();
-          console.log(data);
+          // const data = await res.json();
+          // console.log(data);
           router.back();
         } catch (error) {
           console.error(error);
@@ -85,7 +85,7 @@ const EquipmentDetails = () => {
       }
       
     };
-    deleteUser();
+    deleteEquipment();
   }, [response, selectedEquipment]);
 
   // Close modal function

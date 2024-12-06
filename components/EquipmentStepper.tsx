@@ -8,7 +8,7 @@ interface FormState {
   name: string;
   description: string;
   category: string;
-  image: File | string;
+  images: File | string;
   tags: string[];
   useCases: string;
 }
@@ -73,7 +73,7 @@ const EquipmentStepper = () => {
     name: '',
     description: '',
     category: '',
-    image: "",
+    images: "",
     tags: [],
     useCases: ''
   });
@@ -86,8 +86,11 @@ const EquipmentStepper = () => {
         const tagsArray = value.split(',').map((tag) => tag.trim());
         setTag(tagsArray); // Fix: directly set the array instead of using spread operator
         setForm({...form, tags: tagsArray});
-    }else if (name === 'image' && files && files.length>0) {
-      setForm({...form, image: files[0]});
+    }else if (name === 'images' && files && files.length>0) {
+      const fileArray = Array.from(files);
+      const newImageUrls = fileArray.map((file) => URL.createObjectURL(file));
+      setImages((prev) => [...prev, ...newImageUrls]);
+      setForm({...form, images: fileArray[0]});
     } else{
         setForm({...form, [name]: value }); 
     }
@@ -125,17 +128,18 @@ const EquipmentStepper = () => {
     const formData = new FormData();
 
   // Append all form fields to FormData
-  formData.append("name", form.name);
-  formData.append("description", form.description);
-  formData.append("category", form.category);
+   formData.append("name", form.name);
+   formData.append("description", form.description);
+   formData.append("category", form.category);
   // formData.append("tags", JSON.stringify(form.tags));
-  form.tags.forEach((tag) => formData.append("tags[]", tag));
-  formData.append("useCases", form.useCases);
+   form.tags.forEach((tag) => formData.append("tags[]", tag));
+   formData.append("useCases", form.useCases);
 
   // Append the file (if any)
-  if (form.image instanceof File) {
-    formData.append("files", form.image);
-  }
+
+    if (form.images && typeof form.images === "object") {
+      formData.append("images", form.images as File);
+    }
    
     console.log(formData);
     
@@ -144,7 +148,6 @@ const EquipmentStepper = () => {
         const response = await fetch('https://medequip-api.vercel.app/api/equipment/',{
           method: 'POST',
           headers: {
-             Accept: 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
           body: formData,
@@ -340,14 +343,9 @@ const EquipmentStepper = () => {
                   type="file"
                   onChange={
                     handleChange
-                    // const file = e.target.files ? e.target.files[0] : null; // Check if files is not null
-                    // if (file) {
-                    //   const imageURL = URL.createObjectURL(file);
-                    //   setImages([...images, imageURL]);
-                    // }
                   }
                   accept="image/*"
-                  name="image"
+                  name="images"
                   className="hidden"
                 />
 
@@ -359,7 +357,7 @@ const EquipmentStepper = () => {
                 {images.map((image, index) => (
                   <li key={index} className="relative w-20 h-20">
                     <Image
-                      src={image}
+                      src={typeof image === 'string' ? image : URL.createObjectURL(image)}
                       alt={`Uploaded ${index + 1}`}
                       width={80} // specify width
                       height={80} // specify height
