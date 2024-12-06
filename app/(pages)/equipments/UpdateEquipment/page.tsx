@@ -8,7 +8,7 @@ interface FormState {
     name: string;
     description: string;
     category: string;
-    image: File | string;
+    images: File | string;
     tags: string[];
     useCases: string;
 }
@@ -27,7 +27,7 @@ const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
     name: '',
     description: '',
     category: '',
-    image: '',
+    images: '',
     tags: [],
     useCases: ''
   });
@@ -40,9 +40,9 @@ const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
         const tagsArray = value.split(',').map((tag) => tag.trim());
         setTag(tagsArray); // Fix: directly set the array instead of using spread operator
         setForm({...form, tags: tagsArray});
-    }else if (name === 'image' && files && files.length>0) {
-        // const file = files[0];
-        setForm({...form, image: files[0]});
+    }else if (name === 'images' && files && files.length>0) {
+        const fileArray = Array.from(files);
+        setForm({...form, images: fileArray[0]});
     } else{
         setForm({...form, [name]: value }); 
     }
@@ -63,9 +63,9 @@ const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
   formData.append("useCases", form.useCases);
 
   // Append the file (if any)
-   if (form.image instanceof File) {
-    formData.append("files", form.image);
-   }
+  if (form.images && typeof form.images === "object") {
+    formData.append("images", form.images as File);
+  }
     console.log(formData);
     
     
@@ -141,17 +141,10 @@ const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
             <InputField 
              type='file'
              label='image'
-             name='image' 
+             name='images' 
              className='mb-3 text-xs' 
              placeholder='image' 
-             onChange={(e) => {
-              const file = e.target.files ? e.target.files[0] : null;
-              if (file) {
-                const imageURL = URL.createObjectURL(file);
-                setImages([...images, imageURL]);
-              }
-              
-            }}
+             onChange={handleChange}
            />
 
             <InputField 
