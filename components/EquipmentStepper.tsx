@@ -49,15 +49,12 @@ interface Specifications {
 const EquipmentStepper = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [categories, setCategories] = useState([
     "Surgery",
     "Diagnostics",
     "Therapy",
   ]);
-  const [description, setDescription] = useState("");
   const [specifications, setSpecifications] = useState<Specifications>({});
   const [keywords, setKeywords] = useState(["Surgery"]);
   const [newKeyword, setNewKeyword] = useState("");
@@ -96,11 +93,6 @@ const EquipmentStepper = () => {
     }
     console.log(form);
   }
-
-  // Modal state for success/cancel
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState<"success" | "cancel">("success");
 
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
@@ -169,9 +161,8 @@ const EquipmentStepper = () => {
     
   }
   const handleCancel = () => {
-    setModalMessage("Equipment submission canceled!");
-    setModalType("cancel");
-    setModalVisible(true);
+    router.push("/equipments")
+    alert("Equipmeent creation cancelled");
   };
 
   const handleNext = () => {

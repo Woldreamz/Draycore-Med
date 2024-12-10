@@ -42,7 +42,7 @@ export default function VerifyAccount({params: promiseParams}:{params: Promise<{
     };
 
     verifyToken();
-  }, [router, token]); // Trigger when router is ready and token is available
+  }, [router, token, setVerificationStatus]); // Trigger when router is ready and token is available
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

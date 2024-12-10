@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import shears from "@/public/Images/shears.png";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
-import UpdateEquipment from "../UpdateEquipment/page";
+// import UpdateEquipment from "../UpdateEquipment/page";
 
 
 const EquipmentDetails = () => {
@@ -94,11 +94,11 @@ const EquipmentDetails = () => {
   };
 
   // Save changes and close modal
-  const handleSaveChanges = () => {
-    // Simulate saving the updated data
-    console.log("Changes saved!");
-    setShowUpdateModal(false);
-  };
+  // const handleSaveChanges = () => {
+  //   // Simulate saving the updated data
+  //   console.log("Changes saved!");
+  //   setShowUpdateModal(false);
+  // };
   
 
   const data = [
@@ -161,11 +161,11 @@ const EquipmentDetails = () => {
             >
               &times;
             </button>
-            <UpdateEquipment
+            {/* <UpdateEquipment
               equipment={details} // Pass current equipment details
               onClose={closeModal}
               onSave={handleSaveChanges} // Trigger save functionality
-            />
+            /> */}
           </div>
         </div>
       )}

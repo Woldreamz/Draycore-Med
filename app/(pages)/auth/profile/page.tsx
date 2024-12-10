@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 import Breadcrumbs from "@/components/ui/BreadCrumbs";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
-import Image from "next/image";
 
 const UserDetailsPage = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -84,7 +83,7 @@ const UserDetailsPage = () => {
     };
 
     fetchUsers();
-  },[id]);
+  },[id, user]);
 
   useEffect(() => {
     const deleteUser = async () => {
@@ -109,7 +108,7 @@ const UserDetailsPage = () => {
       
     };
     deleteUser();
-  }, [response, selectedUser]);
+  }, [response, selectedUser, router]);
 
   return (
     <div className="flex flex-col bg-gray-100 w-full lg:grid lg:grid-cols-[auto,1fr] min-h-screen text-gray-800">

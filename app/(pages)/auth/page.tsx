@@ -4,9 +4,7 @@ import Layout from "app/(root)/layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
-  faTrash,
-  faChevronRight,
-  faTimes,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
