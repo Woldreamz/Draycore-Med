@@ -1,7 +1,7 @@
 "use client"
 import React, {FormEvent} from 'react';
 import InputField from '../../../components/ui/InputField';
-import Button from '@/components/ui/Button';
+import Button from '../../../components/ui/Button';
 import { useSearchParams } from "next/navigation";
 import { useVerification } from "../../../context/VerificationContext";
 import { useRouter } from 'next/navigation';
