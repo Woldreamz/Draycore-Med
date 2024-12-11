@@ -1,7 +1,7 @@
 "use client"
 import React, {FormEvent, useState} from 'react';
 import InputField from '../../../../components/ui/InputField';
-import Button from '@/components/ui/Button';
+import Button from '../../../../components/ui/Button';
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface FormState {
@@ -22,7 +22,6 @@ const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
   const router = useRouter();
   console.log(id);
   const [tag, setTag] = useState<string[]>([]);
-  const [images, setImages] = useState([]);
   const [form, setForm] = useState<FormState>({
     name: '',
     description: '',

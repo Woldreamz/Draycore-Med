@@ -1,7 +1,7 @@
 "use client"
 import React, { FormEvent, useState } from 'react';
 import InputField from '../../../components/ui/InputField';
-import Button from '@/components/ui/Button';
+import Button from '../../../components/ui/Button';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

@@ -1,8 +1,7 @@
 "use client"
 import React, {FormEvent, useState, useEffect} from 'react';
 import InputField from '../../../../components/ui/InputField';
-import Button from '@/components/ui/Button';
-import Link from "next/link";
+import Button from '../../../../components/ui/Button';
 import { useRouter, useSearchParams } from "next/navigation";
 
 const UpdateUser = () => {

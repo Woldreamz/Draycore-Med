@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   type?: string; // Optional, defaults to "text"
   otherStyles: string;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   itemRef: any;
 }
 

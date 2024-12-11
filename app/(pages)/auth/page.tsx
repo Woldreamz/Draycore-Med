@@ -6,10 +6,10 @@ import {
   faEye,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "@/components/Navbar";
+import Navbar from "../../../components/Navbar";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useRouter } from 'next/navigation';
-import Modal from '@/components/Modal';
+import Modal from '../../../components/Modal';
 
 interface TopUser {
   username: string;

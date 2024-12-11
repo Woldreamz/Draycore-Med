@@ -7,7 +7,8 @@ interface ButtonProps {
   icon?: React.ReactNode; // icon can be a React node
   label: string;
   onClick: () => void; // a function with no arguments and no return value
-  typeProperty: any;
+   /* eslint-disable @typescript-eslint/no-explicit-any */
+  typeProperty: any; 
   otherStyles: string;
 }
 

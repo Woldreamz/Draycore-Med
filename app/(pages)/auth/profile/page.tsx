@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import Layout from "app/(root)/layout";
-import Navbar from "@/components/Navbar";
-import Breadcrumbs from "@/components/ui/BreadCrumbs";
+import Navbar from "../../../../components/Navbar";
+import Breadcrumbs from "../../../../components/ui/BreadCrumbs";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
 

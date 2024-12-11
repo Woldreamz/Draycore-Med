@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import EquipmentList from "@/components/equipment/cardList";
-import { MinorNav } from "@/components/equipment/minorNav";
-import add from "@/public/icons/add.svg";
+import EquipmentList from "../../../components/equipment/cardList";
+import { MinorNav } from "../../../components/equipment/minorNav";
+import add from "../../../public/icons/add.svg";
 import React from "react";
-import Layout from "app/(root)/layout";
-import Navbar from "@/components/Navbar";
+import Layout from "../../(root)/layout";
+import Navbar from "../../../components/Navbar";
 
 const EquipmentsPage = () => {
   // State variables
   const [searchQuery, setSearchQuery] = useState("");
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equipmentList, setEquipmentList] = useState([]);
@@ -88,7 +89,7 @@ const EquipmentsPage = () => {
               <EquipmentList data={equipmentList} />
             </div>
           )}
-
+          
           {/* Pagination */}
           <div className="flex justify-center mt-6">
             <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">

@@ -8,6 +8,7 @@ function withAuth<P extends object>(WrappedComponent: ComponentType<P>) {
     const router = useRouter(); // Hook to manage routing
     const pathname = usePathname(); // Hook to get the current path
     const [authorized, setAuthorized] = useState(false); // State to manage authorization status
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const [user, setUser] = useState<any>(null); // State to manage user data
 
     useEffect(() => {

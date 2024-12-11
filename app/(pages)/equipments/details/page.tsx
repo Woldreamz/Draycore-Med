@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { EquipmentImageList } from "@/components/equipment/image/imageCollection";
-import EquipmentDetail from "@/components/equipment/forms/details";
-import Layout from "@/app/(root)/layout";
-import Navbar from "@/components/Navbar";
-import Button from "@/components/ui/Button";
-import shears from "@/public/Images/shears.png";
+import { EquipmentImageList } from "../../../../components/equipment/image/imageCollection";
+import EquipmentDetail from "../../../../components/equipment/forms/details";
+import Layout from "../../../(root)/layout";
+import Navbar from "../../../../components/Navbar";
+import Button from "../../../../components/ui/Button";
+import shears from "../../../../public/shears.png";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
 // import UpdateEquipment from "../UpdateEquipment/page";
@@ -61,7 +61,7 @@ const EquipmentDetails = () => {
     };
 
     fetchUsers();
-  },[id]);
+  },[id, allImages, details]);
 
   useEffect(() => {
     const deleteEquipment = async () => {
@@ -86,7 +86,7 @@ const EquipmentDetails = () => {
       
     };
     deleteEquipment();
-  }, [response, selectedEquipment]);
+  }, [response, selectedEquipment, router]);
 
   // Close modal function
   const closeModal = () => {

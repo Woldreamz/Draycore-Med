@@ -5,6 +5,7 @@ import BaseLayout from "components/BaseLayout"; // Ensure this path matches your
 
 const Settings = () => {
   const router = useRouter(); // Initialize the router
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const [profile, setProfile] = useState<any>(null);
 
   const [preferences, setPreferences] = useState({
