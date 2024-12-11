@@ -5,6 +5,7 @@ import Navbar from "../../../../components/Navbar";
 import Breadcrumbs from "../../../../components/ui/BreadCrumbs";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
+import Image from "next/image";
 
 const UserDetailsPage = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -135,7 +136,7 @@ const UserDetailsPage = () => {
           </h3>
 
           <div className="flex flex-col items-center mb-6">
-            <img
+            <Image
               src={
                 profileImage ||
                 "https://via.placeholder.com/150?text=Profile+Image"
