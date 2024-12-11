@@ -12,11 +12,11 @@ interface FormState {
     tags: string[];
     useCases: string;
 }
-  interface UpdateEquipmentProps {
-    closeModal: () => void;
-  }
+  // interface UpdateEquipmentProps {
+  //   closeModal: () => void;
+  // }
 
-const UpdateEquipment: React.FC<UpdateEquipmentProps> = ({ closeModal }) => {
+const UpdateEquipment = () => {
   const searchParams = useSearchParams();
   const id = searchParams?.get('id');
   const router = useRouter();
