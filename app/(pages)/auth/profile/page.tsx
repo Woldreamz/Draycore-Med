@@ -5,7 +5,6 @@ import Navbar from "../../../../components/Navbar";
 import Breadcrumbs from "../../../../components/ui/BreadCrumbs";
 import { useSearchParams, useRouter } from "next/navigation";
 import Modal from '@/components/Modal';
-import Image from "next/image";
 
 const UserDetailsPage = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -73,7 +72,10 @@ const UserDetailsPage = () => {
             },
           }
         );
-        if (!response.ok) throw new Error('Failed to fetch User data', response.json);
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(`Failed to fetch user data: ${JSON.stringify(errorDetails)}`);
+        }
         const data = await response.json();
         console.log(data);
         setUser(data);
@@ -98,7 +100,10 @@ const UserDetailsPage = () => {
               },
             }
           );
-          if (!res.ok) throw new Error('Failed to delete user', res.json);
+          if (!res.ok) {
+            const errorDetails = await res.json();
+            throw new Error(`Failed to delete user: ${JSON.stringify(errorDetails)}`);
+          }
           const data = await res.json();
           console.log(data);
           router.back();
@@ -136,7 +141,7 @@ const UserDetailsPage = () => {
           </h3>
 
           <div className="flex flex-col items-center mb-6">
-            <Image
+            <img
               src={
                 profileImage ||
                 "https://via.placeholder.com/150?text=Profile+Image"

@@ -49,7 +49,10 @@ const EquipmentDetails = () => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(`https://medequip-api.vercel.app/api/equipment/${id}`);
-        if (!response.ok) throw new Error('Failed to fetch equipment', response.json);
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(`Failed to fetch equipment detail: ${JSON.stringify(errorDetails)}`);
+        }
         const data = await response.json();
         console.log(data);
         setDetails(data);
@@ -75,7 +78,10 @@ const EquipmentDetails = () => {
               },
             }
           );
-          if (!res.ok) throw new Error('Failed to delete user', res.json);
+          if (!res.ok) {
+            const errorDetails = await res.json();
+            throw new Error(`Failed to delete equipment: ${JSON.stringify(errorDetails)}`);
+          }
           // const data = await res.json();
           // console.log(data);
           router.back();

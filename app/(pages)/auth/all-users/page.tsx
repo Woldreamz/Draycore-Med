@@ -50,7 +50,10 @@ const AllUsers = () => {
             },
           }
         );
-        if (!response.ok) throw new Error('Failed to fetch equipment', response.json);
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(`Failed to get users: ${JSON.stringify(errorDetails)}`);
+        }
         const data = await response.json();
         console.log(data);
         setusersList(data);

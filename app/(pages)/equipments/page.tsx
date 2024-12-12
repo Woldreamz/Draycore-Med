@@ -20,7 +20,10 @@ const EquipmentsPage = () => {
     const equipList = async () => {
       try {
         const response = await fetch(`https://medequip-api.vercel.app/api/equipment/`);
-        if (!response.ok) throw new Error('Failed to fetch equipment', response.json);
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          throw new Error(`Failed to fetch equipments: ${JSON.stringify(errorDetails)}`);
+        }
         const data = await response.json();
         console.log(data);
         setEquipmentList(data.data);
