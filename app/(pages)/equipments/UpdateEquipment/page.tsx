@@ -33,7 +33,7 @@ const UpdateEquipment = () => {
 
   function handleChange(event:React.ChangeEvent<HTMLInputElement>) {
     const { name, value, files } = event.target;
-   
+
 
     if (name === 'tags') {
         const tagsArray = value.split(',').map((tag) => tag.trim());
@@ -66,8 +66,8 @@ const UpdateEquipment = () => {
     formData.append("images", form.images as File);
   }
     console.log(formData);
-    
-    
+
+
     try {
         const response = await fetch(`https://medequip-api.vercel.app/api/equipment/${id}`,{
           method: 'PUT',
@@ -90,7 +90,7 @@ const UpdateEquipment = () => {
       } catch (error) {
         console.error("An error occured:", error);
       }
-    
+
   }
 
   return (
@@ -168,18 +168,18 @@ const UpdateEquipment = () => {
             />
 
            <div className="flex justify-between mt-4">
-            <Button
+            {/* <Button
               typeProperty="button"
               label="Cancel"
               onClick={closeModal}
               otherStyles="bg-red-500 text-white"
-            />
+            /> */}
 
             <Button 
               typeProperty="submit"
               label='Create Equipment'
               otherStyles='w-full'
-              onClick={handleSubmit}
+              onClick={() => handleSubmit}
             />
             </div>
           </form>

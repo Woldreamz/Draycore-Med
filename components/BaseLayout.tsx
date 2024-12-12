@@ -33,7 +33,8 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
       {isMediumUp ? (
         <div className="flex flex-grow">
           {/* Desktop layout: Sidebar + Main Content */}
-          <Sidebar className="flex-shrink-0" />
+          <Sidebar />
+
           <main className="flex-grow relative p-4 overflow-hidden">
             <Header />
             <div className="overflow-auto h-full">{children}</div>

@@ -182,7 +182,7 @@ const SignUp = () => {
               typeProperty="submit"
               label='Create Account'
               otherStyles='w-full'
-              onClick={handleSubmit}
+              onClick={() => handleSubmit}
             />
           </form>
 

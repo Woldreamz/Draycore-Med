@@ -77,7 +77,7 @@ const SignIn = () => {
                            typeProperty="submit"
                            label='Sign In'
                            otherStyles='w-full'
-                           onClick={handleSubmit}
+                           onClick={() => handleSubmit}
                        />
                    </form>
 

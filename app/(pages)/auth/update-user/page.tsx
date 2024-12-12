@@ -171,7 +171,7 @@ const UpdateUser = () => {
               typeProperty="submit"
               label='Update user'
               otherStyles='w-full'
-              onClick={handleSubmit}
+              onClick={() => handleSubmit}
             />
           </form>
 

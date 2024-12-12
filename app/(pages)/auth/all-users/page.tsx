@@ -77,7 +77,10 @@ const AllUsers = () => {
               },
             }
           );
-          if (!res.ok) throw new Error('Failed to delete user', res.json);
+          if (!res.ok) {
+            const errorDetails = await res.json();
+            throw new Error(`Failed to delete user: ${JSON.stringify(errorDetails)}`);
+          }
           const data = await res.json();
           console.log(data);
           // setusersList((prev) => prev.filter((user) => user.id !== selectedUser));

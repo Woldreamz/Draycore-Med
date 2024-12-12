@@ -4,9 +4,9 @@ import React from "react";
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   type?: string; // Optional, defaults to "text"
-  otherStyles: string;
+  otherStyles?: string;
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  itemRef: any;
+  itemRef?: any;
 }
 
 const InputField = ({ label, otherStyles, itemRef, type = "text", ...props }: InputFieldProps) => {

@@ -77,7 +77,7 @@ const EquipmentStepper = () => {
 
   function handleChange(event:React.ChangeEvent<HTMLInputElement>) {
     const { name, value, files } = event.target;
-   
+
 
     if (name === 'tags') {
         const tagsArray = value.split(',').map((tag) => tag.trim());
@@ -92,6 +92,11 @@ const EquipmentStepper = () => {
         setForm({...form, [name]: value }); 
     }
     console.log(form);
+  }
+
+  function handleChange2(event:React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = event.target;
+    setForm({...form, [name]: value });
   }
 
   const handleAddCategory = () => {
@@ -195,7 +200,7 @@ const EquipmentStepper = () => {
               <div className="flex gap-2 mt-1">
                 <select
                   value={form.category}
-                  onChange={handleChange}
+                  onChange={handleChange2}
                   name="category"
                   className="flex-1 border-gray-300 rounded-md shadow-sm"
                 >
@@ -237,7 +242,7 @@ const EquipmentStepper = () => {
               </p>
               <textarea
                 value={form.description}
-                onChange={handleChange}
+                onChange={handleChange2}
                 name="description"
                 placeholder="Enter description here..."
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
@@ -425,7 +430,7 @@ const EquipmentStepper = () => {
               </p>
               <textarea
                 value={form.useCases}
-                onChange={handleChange}
+                onChange={handleChange2}
                 placeholder="Enter a use case"
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 rows={3}
