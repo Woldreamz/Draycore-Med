@@ -121,7 +121,7 @@ const EquipmentDetails = () => {
     gender: "Female",
     length: "15cm",
     width: "30cm",
-    keywords: [details.tags],
+    keywords: details.tags.flat(),
     useCases: details.useCases
   };
 
@@ -140,8 +140,8 @@ const EquipmentDetails = () => {
           <div className='flex flex-row justify-between h-10 my-4'>
             <h3 className='text-black text-lg pl-5 md:pl-[15%]'>Equipment Details</h3>
             <div className='flex justify-between gap-4'>
-                <Button label='Edit' otherStyles='' onClick={() => router.push(`/equipments/UpdateEquipment?id=${encodeURIComponent(details.id)}`)} typeProperty="button"/>
-                <Button label='Delete'otherStyles='' onClick={() => {handleOpenModal(details.id)}} typeProperty="button" />
+                <Button label='Edit' otherStyles='' onClick={() => router.push(`/equipments/UpdateEquipment?id=${encodeURIComponent(Number(details.id))}`)} typeProperty="button"/>
+                <Button label='Delete'otherStyles='' onClick={() => {handleOpenModal(Number(details.id))}} typeProperty="button" />
             </div>
             <Modal
               isOpen={showModal}
