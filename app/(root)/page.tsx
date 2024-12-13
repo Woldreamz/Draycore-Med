@@ -17,6 +17,7 @@ type SubItem = {
 };
 
 function Home() {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [activeNav, setActiveNav] = useState<string>("dashboard");
   const [accountsSubNav, setAccountsSubNav] = useState<SubItem[]>([]);
   // const [showSidebar, setShowSidebar] = useState(false);
@@ -32,9 +33,9 @@ function Home() {
     <div className="fixed bg-white relative flex flex-col md:flex-row h-screen">
       {/* Sidebar (uncomment when Sidebar is ready for use) */}
       <Sidebar
-        activeNav={activeNav}
-        setActiveNav={setActiveNav}
-        setAccountsSubNav={setAccountsSubNav}
+        // activeNav={activeNav}
+        // setActiveNav={setActiveNav}
+        // setAccountsSubNav={setAccountsSubNav}
       />
       <Navbar />
       {/* Main Content */}
