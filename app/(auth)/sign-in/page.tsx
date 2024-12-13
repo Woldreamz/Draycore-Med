@@ -1,7 +1,6 @@
 "use client"
 import React, { FormEvent, useState } from 'react';
 import InputField from '../../../components/ui/InputField';
-import Button from '../../../components/ui/Button';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -73,12 +72,11 @@ const SignIn = () => {
                             <span className='text-sm'>Remember Me</span>
                         </div>
 
-                       <Button
-                           typeProperty="submit"
-                           label='Sign In'
-                           otherStyles='w-full'
-                           onClick={() => handleSubmit}
-                       />
+                       <button
+                           type="submit"
+                           className='w-full'
+                           onClick={handleSubmit}
+                        >Sign In</button>
                    </form>
 
                    <div className='text-center mt-8 text-xs'>

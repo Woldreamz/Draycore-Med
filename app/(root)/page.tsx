@@ -30,7 +30,7 @@ function Home() {
   }, [activeNav]);
 
   return (
-    <div className="fixed bg-white relative flex flex-col md:flex-row h-screen">
+    <div className=" bg-white relative flex flex-col md:flex-row h-screen">
       {/* Sidebar (uncomment when Sidebar is ready for use) */}
       <Sidebar
         // activeNav={activeNav}

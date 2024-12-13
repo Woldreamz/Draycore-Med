@@ -6,7 +6,7 @@ interface ButtonProps {
   type?: "primary" | "critical";
   icon?: React.ReactNode; // icon can be a React node
   label: string;
-  onClick: () => void; // a function with no arguments and no return value
+  onClick?: () => void; // a function with no arguments and no return value
    /* eslint-disable @typescript-eslint/no-explicit-any */
   typeProperty: any; 
   otherStyles: string;
