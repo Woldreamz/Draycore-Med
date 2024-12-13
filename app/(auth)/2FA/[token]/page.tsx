@@ -34,7 +34,7 @@ export default function VerifyAccount({params: promiseParams}:{params: Promise<{
         const result = await response.json();
         setData(result);
         setVerificationStatus("success"); // Update the verification status in the VerificationContext
-        router.push("/verified");
+        router.push("/Verified");
       } catch (err) {
         setError((err as Error).message);
         setVerificationStatus("error");
