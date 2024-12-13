@@ -61,7 +61,7 @@ const UpdateEquipment = () => {
   if (form.images && typeof form.images === "object") {
     formData.append("images", form.images as File);
   }
-    console.log(formData);
+    // console.log(formData);
     
     
     try {

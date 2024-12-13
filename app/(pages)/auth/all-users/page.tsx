@@ -55,7 +55,7 @@ const AllUsers = () => {
           throw new Error(`Failed to get users: ${JSON.stringify(errorDetails)}`);
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setusersList(data);
       } catch (error) {
         console.error(error);

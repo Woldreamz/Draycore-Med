@@ -46,7 +46,7 @@ const UpdateUser = () => {
   function handleChange(event:React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
     setForm((prevForm) => ({...prevForm, [name]: value })); 
-    console.log(form);  
+    // console.log(form);  
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -65,7 +65,7 @@ const UpdateUser = () => {
         if (response.ok) {
           //redirect to the email verification page after sucessfull submission
           const responseData = await response.json();
-          console.log(responseData);
+          // console.log(responseData);
           localStorage.setItem('user', JSON.stringify(responseData));
           alert("User updated  successfully");
           router.push('/');

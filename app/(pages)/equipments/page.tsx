@@ -25,7 +25,7 @@ const EquipmentsPage = () => {
           throw new Error(`Failed to fetch equipments: ${JSON.stringify(errorDetails)}`);
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setEquipmentList(data.data);
       } catch (error) {
         console.error(error);

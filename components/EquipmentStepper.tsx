@@ -138,7 +138,7 @@ const EquipmentStepper = () => {
       formData.append("images", form.images as File);
     }
     
-    console.log(formData);
+    // console.log(formData);
     
     
     try {

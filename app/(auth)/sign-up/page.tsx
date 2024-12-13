@@ -36,7 +36,7 @@ const SignUp = () => {
       address: form.address,
       password: form.password
     }
-    console.log(data);
+    // console.log(data);
     
     if (form.password === form.confirmPassword) {
       try {
