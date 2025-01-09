@@ -30,7 +30,7 @@ function Home() {
   }, [activeNav]);
 
   return (
-    <div className=" bg-white relative flex flex-col md:flex-row h-screen">
+    <div className=" bg-gray-100 relative flex flex-col md:flex-row h-screen">
       {/* Sidebar (uncomment when Sidebar is ready for use) */}
       <Sidebar
         // activeNav={activeNav}
@@ -41,7 +41,7 @@ function Home() {
       {/* Main Content */}
       {/* Dashboard Content */}
       {activeNav === "dashboard" && (
-        <div className="flex flex-col gap-4 w-full md:ml-64">
+        <div className="flex flex-col gap-4 w-full md:ml-6 lg:ml-60">
           <DashboardContent /> {/* Rendering the DashboardContent */}
         </div>
       )}

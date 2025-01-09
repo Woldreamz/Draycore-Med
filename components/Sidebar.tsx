@@ -8,10 +8,8 @@ import { MdOutlineDashboard } from "react-icons/md";
 import {
   HiOutlineUsers,
   HiUsers,
-  HiUser,
   HiOutlineScissors,
-  HiBadgeCheck,
-  HiTrendingUp,
+  HiBadgeCheck
 } from "react-icons/hi";
 import { RiFirstAidKitLine } from "react-icons/ri";
 import { GoGear } from "react-icons/go";
@@ -24,6 +22,8 @@ const Sidebar = () => {
     Accounts: false,
     Equipments: false,
   });
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleDropdown = (itemName: string) => {
     setDropdownOpen((prev) => ({
@@ -45,7 +45,6 @@ const Sidebar = () => {
       subItems: [
         { name: "Accounts", href: "/auth", icon: HiOutlineUsers },
         { name: "All Users", href: "/auth/all-users", icon: HiUsers },
-        { name: "User Profile", href: "/auth/profile", icon: HiUser },
       ],
     },
     {
@@ -55,12 +54,7 @@ const Sidebar = () => {
       subItems: [
         { name: "Equipments", href: "/equipments", icon: HiOutlineScissors },
         {
-          name: "Equipment Details",
-          href: "/equipments/details",
-          icon: HiTrendingUp,
-        },
-        {
-          name: "Basic Information",
+          name: "Create Equipment",
           href: "/equipments/basic_information",
           icon: HiBadgeCheck,
         },
@@ -81,9 +75,23 @@ const Sidebar = () => {
 
   return (
     <div className="flex bg-white flex-col md:flex-row pb-2 md:h-full lg:h-full h-0">
-      <div className="fixed inset-y-0 left-0 w-[70%] md:w-[20%] bg-white shadow-md z-50">
+
+      {/* Toggle Button for small/medium screens */}
+      <button
+        className="block lg:hidden ml-1 p-3 bg-teal-600 text-white fixed top-1 left-0 z-50"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        {sidebarOpen ?  <Image className="text-white" src="/images/x icon.svg" alt="xicon" width={21} height={21}/> 
+         : <Image className="text-white" src="/images/bars-solid.svg" alt="xicon" width={21} height={21}/>}
+      </button>
+
+      {/* Sidebar */}
+
+      <div className={`fixed inset-y-0 left-0 z-40 w-[50%] md:w-[25%] lg:w-[20%] bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0`}>
         <div className="shadow h-15 bg-white border w-full p-4">
-          <Image width={140} height={85} src="/Logo.svg" alt="logo" priority />
+          <Image className="xm:ml-8 sm:ml-8 md:ml-8 lg:ml-0" width={140} height={85} src="/Logo.svg" alt="logo" priority />
         </div>
         <aside className="bg-white text-white w-full h-full">
           <ul className="mt-4 relative flex h-3/4 flex-col p-4 gap-4">

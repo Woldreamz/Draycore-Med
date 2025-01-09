@@ -207,7 +207,7 @@ const DashboardContent = () => {
     <div className="flex bg-gray-100 min-h-screen">
       {/* Sidebar */}
       <Layout>
-        <div className="hidden md:block md:w-1/4 bg-white shadow-lg">
+        <div className="hidden md:block md:w-1/4 bg-gray-100 shadow-lg">
           {/* Sidebar content if needed */}
         </div>
         <Navbar />
